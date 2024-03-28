@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"gundambox.github.io","root":"/","scheme":"Gemini","version":"8.0.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"width":300,"onmobile":false},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"prism":false,"i18n":{"placeholder":"搜尋...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+
+  <meta name="description" content="這篇主要在講C語言中，變數的型別與運算">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C語言-資料型態與變數運算">
+<meta property="og:url" content="http://gundambox.github.io/2015/10/19/C%E8%AA%9E%E8%A8%80-%E8%B3%87%E6%96%99%E5%9E%8B%E6%85%8B%E8%88%87%E8%AE%8A%E6%95%B8%E9%81%8B%E7%AE%97/index.html">
+<meta property="og:site_name" content="鋼彈盪單槓">
+<meta property="og:description" content="這篇主要在講C語言中，變數的型別與運算">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2015-10-19T02:03:03.000Z">
+<meta property="article:modified_time" content="2024-03-28T00:43:41.556Z">
+<meta property="article:author" content="Gundambox">
+<meta property="article:tag" content="C語言">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://gundambox.github.io/2015/10/19/C%E8%AA%9E%E8%A8%80-%E8%B3%87%E6%96%99%E5%9E%8B%E6%85%8B%E8%88%87%E8%AE%8A%E6%95%B8%E9%81%8B%E7%AE%97/">
+
+
+<script data-pjax class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-TW'
+  };
+</script>
+
+  <title>C語言-資料型態與變數運算 | 鋼彈盪單槓</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="鋼彈盪單槓" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">鋼彈盪單槓</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">鋼彈的 coding 筆記</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>關於</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>標籤</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分類</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>歸檔</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜尋
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜尋..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%B3%87%E6%96%99%E5%9E%8B%E6%85%8B"><span class="nav-number">1.</span> <span class="nav-text">資料型態</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%8A%E6%95%B8"><span class="nav-number">2.</span> <span class="nav-text">變數</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%81%8B%E7%AE%97"><span class="nav-number">3.</span> <span class="nav-text">運算</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%97%E8%A1%93%E9%81%8B%E7%AE%97"><span class="nav-number">3.1.</span> <span class="nav-text">算術運算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%9C%E4%BF%82%E9%81%8B%E7%AE%97"><span class="nav-number">3.2.</span> <span class="nav-text">關係運算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%82%8F%E8%BC%AF%E9%81%8B%E7%AE%97"><span class="nav-number">3.3.</span> <span class="nav-text">邏輯運算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%8D%E5%85%83%E8%88%87%E4%BD%8D%E7%A7%BB%E9%81%8B%E7%AE%97"><span class="nav-number">3.4.</span> <span class="nav-text">位元與位移運算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%81%9E%E5%A2%9E%E3%80%81%E9%81%9E%E6%B8%9B%E9%81%8B%E7%AE%97"><span class="nav-number">3.5.</span> <span class="nav-text">遞增、遞減運算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%87%E5%AE%9A%E9%81%8B%E7%AE%97"><span class="nav-number">3.6.</span> <span class="nav-text">指定運算</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%83%E8%80%83"><span class="nav-number">4.</span> <span class="nav-text">參考</span></a></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Gundambox"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Gundambox</p>
+  <div class="site-description" itemprop="description">什麼都碰，什麼都會，什麼都不會的鋼彈</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">40</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="http://gundambox.github.io/" title="GitHub → http:&#x2F;&#x2F;gundambox.github.io"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </section>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="http://gundambox.github.io/2015/10/19/C%E8%AA%9E%E8%A8%80-%E8%B3%87%E6%96%99%E5%9E%8B%E6%85%8B%E8%88%87%E8%AE%8A%E6%95%B8%E9%81%8B%E7%AE%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Gundambox">
+      <meta itemprop="description" content="什麼都碰，什麼都會，什麼都不會的鋼彈">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="鋼彈盪單槓">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          C語言-資料型態與變數運算
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">發表於</span>
+
+      <time title="創建時間：2015-10-19 10:03:03" itemprop="dateCreated datePublished" datetime="2015-10-19T10:03:03+08:00">2015-10-19</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新於</span>
+        <time title="修改時間：2024-03-28 08:43:41" itemprop="dateModified" datetime="2024-03-28T08:43:41+08:00">2024-03-28</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分類於</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/C%E8%AA%9E%E8%A8%80/" itemprop="url" rel="index"><span itemprop="name">C語言</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2015/10/19/C%E8%AA%9E%E8%A8%80-%E8%B3%87%E6%96%99%E5%9E%8B%E6%85%8B%E8%88%87%E8%AE%8A%E6%95%B8%E9%81%8B%E7%AE%97/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/10/19/C語言-資料型態與變數運算/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="文章字數">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">文章字數：</span>
+      <span>6.8k</span>
+    </span>
+    <span class="post-meta-item" title="所需閱讀時間">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">所需閱讀時間 &asymp;</span>
+      <span>6 分鐘</span>
+    </span>
+</div>
+
+            <div class="post-description">這篇主要在講C語言中，變數的型別與運算</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="資料型態"><a href="#資料型態" class="headerlink" title="資料型態"></a>資料型態</h1><p>程式在執行的過程中需要許多的資訊，而這些資訊都儲存在記憶體空間中</p>
+<p>而根據資訊的用途與所需空間的不同，所以訂定了<strong>資料型態</strong>的規範</p>
+<p>資料型態分為</p>
+<ul>
+<li><p>整數：用來表示整數，其所佔的記憶體空間有可能因為編譯器而有所不同，可以使用unsigned修飾字讓有號整數變成無號整數</p>
+<ul>
+<li>short (短整數，佔2位元組)</li>
+<li>int (整數，佔4位元組)</li>
+<li>unsigned (無號整數，佔4位元組)</li>
+<li>long (長整數，佔4位元組)</li>
+<li>long long int (長長整數，佔8位元組)</li>
+</ul>
+</li>
+<li><p>浮點數：可以用來表示小數</p>
+<ul>
+<li>float (單精度浮點數，佔4位元組，精度只到小數點以下7位)</li>
+<li>double (雙精度浮點數，佔8位元組，精度只到小數點以下15位)</li>
+<li>long double (長雙精度浮點數，佔16位元組)</li>
+</ul>
+</li>
+<li><p>字元：字元編碼依ASCII表編成，因為所佔有空間小，也可以表達小範圍的整數</p>
+<ul>
+<li>char (字元，佔1位元組)</li>
+</ul>
+</li>
+</ul>
+<p>以下為示範程式，用TDM-GCC 4.9.2編譯的</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;型態\t\t大小（bytes）\n&quot;</span>);  </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;short\t\t%d\n&quot;</span>, <span class="keyword">sizeof</span>(<span class="keyword">short</span>));    </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;int\t\t%d\n&quot;</span>, <span class="keyword">sizeof</span>(<span class="keyword">int</span>));</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;unsigned\t\t%d\n&quot;</span>, <span class="keyword">sizeof</span>(<span class="keyword">int</span>));</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;long\t\t%d\n&quot;</span>, <span class="keyword">sizeof</span>(<span class="keyword">long</span>));</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;long long\t%d\n&quot;</span>, <span class="keyword">sizeof</span>(<span class="keyword">long</span> <span class="keyword">long</span>));</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;float\t\t%d\n&quot;</span>, <span class="keyword">sizeof</span>(<span class="keyword">float</span>));</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;double\t\t%d\n&quot;</span>, <span class="keyword">sizeof</span>(<span class="keyword">double</span>));  </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;long double\t%d\n&quot;</span>, <span class="keyword">sizeof</span>(<span class="keyword">long</span> <span class="keyword">double</span>));    </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;char\t\t%d\n&quot;</span>, <span class="keyword">sizeof</span>(<span class="keyword">char</span>));    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>\t為跳脫字元，用來對齊下一個顯示位置</p>
+<p>%d為格式指定碼，表示這個位置要放入整數，然後被後面sizeof的運算結果取代</p>
+<p>sizeof的功能是取得該型態所佔的記憶體大小</p>
+<p>以下為執行結果</p>
+<pre><code>型態            大小（bytes）
+short           2
+int             4
+unsigned        4
+long            4
+long long       8
+float           4
+double          8
+long double     16
+char            1</code></pre>
+<p>以下為型別的範圍大小</p>
+<table>
+<thead>
+<tr>
+<th>型別</th>
+<th>最大值</th>
+<th>最小值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>char</td>
+<td>127</td>
+<td>-128</td>
+</tr>
+<tr>
+<td>short</td>
+<td>32767</td>
+<td>-32768</td>
+</tr>
+<tr>
+<td>int</td>
+<td>2147483647</td>
+<td>-2147483648</td>
+</tr>
+<tr>
+<td>unsigned</td>
+<td>4294967296</td>
+<td>0</td>
+</tr>
+<tr>
+<td>long</td>
+<td>2147483647</td>
+<td>-2147483648</td>
+</tr>
+<tr>
+<td>long long</td>
+<td>9223372036854775807</td>
+<td>-9223372036854775808</td>
+</tr>
+<tr>
+<td>float</td>
+<td>$3.40282*10^{38}$</td>
+<td>$1.17549*10^{-38}$</td>
+</tr>
+<tr>
+<td>double</td>
+<td>$1.79769*10^{308}$</td>
+<td>$2.22507*10^{-308}$</td>
+</tr>
+<tr>
+<td>long double</td>
+<td>$1.18973*10^{4932}$</td>
+<td>$3.3621*10^{-4932}$</td>
+</tr>
+</tbody></table>
+<h1 id="變數"><a href="#變數" class="headerlink" title="變數"></a>變數</h1><p>有了資料型態之後要怎麼把資料存在記憶體呢？答案是變數</p>
+<p>變數簡單說就是一個代表某種資料型態且有名稱的記憶體空間</p>
+<p>要使用變數之前，必須先宣告變數名稱跟資料型態，以下是變數宣告的範例</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> num; <span class="comment">// 宣告一個整數變數</span></span><br></pre></td></tr></table></figure>
+
+<p>‘=’是指定符號，也就是將某個變數代入某個值</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">score = <span class="number">100</span>;</span><br><span class="line">level = <span class="string">&#x27;A&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>有些名稱是不能拿來當變數名稱的，稱為<strong>保留字</strong>，以下為保留字</p>
+<table>
+<thead>
+<tr>
+<th>保留字</th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>char</td>
+<td>short</td>
+<td>int</td>
+<td>unsigned</td>
+</tr>
+<tr>
+<td>long</td>
+<td>float</td>
+<td>double</td>
+<td>struct</td>
+</tr>
+<tr>
+<td>union</td>
+<td>void</td>
+<td>enum</td>
+<td>signed</td>
+</tr>
+<tr>
+<td>const</td>
+<td>volatile</td>
+<td>typedef</td>
+<td>auto</td>
+</tr>
+<tr>
+<td>register</td>
+<td>static</td>
+<td>extern</td>
+<td>break</td>
+</tr>
+<tr>
+<td>case</td>
+<td>continue</td>
+<td>default</td>
+<td>do</td>
+</tr>
+<tr>
+<td>else</td>
+<td>for</td>
+<td>goto</td>
+<td>if</td>
+</tr>
+<tr>
+<td>return</td>
+<td>switch</td>
+<td>while</td>
+<td>sizeof</td>
+</tr>
+</tbody></table>
+<p>通常變數命名都建議使用有意義的文字表明變數作用</p>
+<p>例如age_of_student、price_of_goods，而不是a、b、c這種無意義的變數名稱</p>
+<p>以下是變數宣告的示範程式</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> NT_dollar;</span><br><span class="line">    <span class="keyword">float</span> discount;</span><br><span class="line">    <span class="keyword">char</span> member_level;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;價錢\t\t折扣\t\t會員等級\n&quot;</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d\t\t%f\t%c\n&quot;</span>,NT_dollar,discount,member_level);</span><br><span class="line">    </span><br><span class="line">    NT_dollar = <span class="number">1000</span>;</span><br><span class="line">    discount = <span class="number">0.2</span>;</span><br><span class="line">    member_level = <span class="string">&#x27;A&#x27;</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;價錢\t\t折扣\t\t會員等級\n&quot;</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d\t\t%f\t%c\n&quot;</span>,NT_dollar,discount,member_level);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>執行結果</p>
+<pre><code>價錢            折扣            會員等級
+0               0.000000                
+價錢            折扣            會員等級
+1000            0.200000       A</code></pre>
+<p>現在的編譯器會很好心的在你宣告變數的時候指定初始值為0</p>
+<p>就像上面的例子一樣，在變數剛宣告卻未指定內容的情況下，NT_dollar的內容為0</p>
+<p>若使用老舊的編譯器有可能會出現以下結果</p>
+<pre><code>價錢            折扣            會員等級
+2147315712        2293592        4199430
+價錢            折扣            會員等級
+1000            0.200000       A</code></pre>
+<p>可以看到未指定初始值的變數內容是不可預測的</p>
+<p>初始值的設定就是在變數宣告的時候指定一個值給變數，例如：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> score = <span class="number">100</span>;</span><br><span class="line"><span class="keyword">char</span> level = <span class="string">&#x27;A&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>有時候你希望變數宣告之後就再不會變更內容，這時候就要在前面加關鍵字<strong>const</strong>，例如：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="keyword">float</span> PI = <span class="number">3.14159</span>;</span><br></pre></td></tr></table></figure>
+
+<p>如果你試圖修改PI的值</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PI = <span class="number">3.14</span>; </span><br></pre></td></tr></table></figure>
+
+<p>你就會得到以下錯誤訊息</p>
+<p><font color="red">assignment of read-only variable ‘PI’</font></p>
+<h1 id="運算"><a href="#運算" class="headerlink" title="運算"></a>運算</h1><h2 id="算術運算"><a href="#算術運算" class="headerlink" title="算術運算"></a>算術運算</h2><p>C語言除了提供加(+)、減(-)、乘(*)、除(/)以外，還提供餘除運算子(%)或者稱為模數運算子</p>
+<p>這五個以數學運算為主的運算子稱為算術運算子</p>
+<p>運算順序基本上是由左而右，先乘除後加減，可以加上括號表示運算的先後順序，例如：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>,<span class="number">1</span>+<span class="number">2</span><span class="number">-3</span>*<span class="number">4</span>);</span><br></pre></td></tr></table></figure>
+
+<p>這樣結果是-9</p>
+<p>而%這個運算子的功能是取出計算除法之後的餘數，例如：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>,<span class="number">9</span>%<span class="number">6</span>);</span><br></pre></td></tr></table></figure>
+
+<p>這樣結果是3</p>
+<p>雖然數學運算簡單，但有一個情況要注意</p>
+<p>就是計算結果會產生不同型態的時候，例如：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, <span class="number">10</span>/<span class="number">3</span>);</span><br></pre></td></tr></table></figure>
+
+<p>這樣結果並不是3.333333，而是3，因為10跟3都是整數，小數會被捨去</p>
+<p>而為了顯示正確結果，還要使用%f格式(表示浮點數)以外，這是C的隱式型態轉換(Implicit type conversion)</p>
+<p>在型態混雜算式中，長度較長的型態會變成目標型態，其他型態都會轉為目標型態，轉換過程稱為算術轉換(Arithmetic conversion)</p>
+<p>也就是說，只要改成下列例子，結果就可以變成3.333333</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%f\n&quot;</span>, <span class="number">10.0</span>/<span class="number">3</span>);</span><br></pre></td></tr></table></figure>
+
+<p>而在指定動作中，左邊的數值會成為目標型態</p>
+<p>也就是說，如果右邊的資料型態比目標型態的長度來得小，轉換過程不會有問題，例如：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> num = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">double</span> number = num;</span><br></pre></td></tr></table></figure>
+
+<p>但是如果右邊的資料型態長度比較大，超出範圍的部分就會被捨去，例如：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">double</span> pi = <span class="number">3.14</span>;</span><br><span class="line"><span class="keyword">int</span> PI = pi; <span class="comment">// 小數點會被捨去，只留下3</span></span><br></pre></td></tr></table></figure>
+
+<p>另外你也可以將變數轉換為指定型態，稱為強制轉型，例如</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> number = <span class="number">10</span>;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%f\n&quot;</span>, (<span class="keyword">float</span>)number / <span class="number">3</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="關係運算"><a href="#關係運算" class="headerlink" title="關係運算"></a>關係運算</h2><p>數學中有比較的觀念，在C語言裡面則稱為關係運算子</p>
+<p>有大於(&gt;)、不小於(&gt;=)、小於(&lt;)、不大於(&lt;=)、等於(==)以及不等於(!=)</p>
+<p>以下是關係運算子的範例程式</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;10 &gt; 5\t\t%d\n&quot;</span>, <span class="number">10</span> &gt; <span class="number">5</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;10 &gt;= 5\t\t%d\n&quot;</span>, <span class="number">10</span> &gt;= <span class="number">5</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;10 &lt; 5\t\t%d\n&quot;</span>, <span class="number">10</span> &lt; <span class="number">5</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;10 &lt;= 5\t\t%d\n&quot;</span>, <span class="number">10</span> &lt;= <span class="number">5</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;10 == 5\t\t%d\n&quot;</span>, <span class="number">10</span> == <span class="number">5</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;10 != 5\t\t%d\n&quot;</span>, <span class="number">10</span> != <span class="number">5</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以下是執行結果，0表示False，1表示True</p>
+<pre><code>10 &gt; 5          1
+10 &gt;= 5         1
+10 &lt; 5          0
+10 &lt;= 5         0
+10 == 5         0
+10 != 5         1</code></pre>
+<h2 id="邏輯運算"><a href="#邏輯運算" class="headerlink" title="邏輯運算"></a>邏輯運算</h2><p>在邏輯上有AND，OR、NOT運算</p>
+<p>C也有提供邏輯運算子分別為AND(&amp;&amp;)、OR(||)及NOT(!)三個運算子</p>
+<p>以下是邏輯運算的範例程式</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">int</span> num = <span class="number">75</span>;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, (num &gt; <span class="number">70</span> &amp;&amp; num &lt; <span class="number">80</span>));</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, (num &gt; <span class="number">80</span> || num &lt; <span class="number">75</span>));</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, !(num &gt; <span class="number">80</span> || num &lt; <span class="number">75</span>));</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>執行結果分別為1、0、1</p>
+<p>值得注意的是在&amp;&amp;運算中，如果左邊的式子被判斷為False，即可判斷整個式子為False</p>
+<p>||運算中，如果左邊的式子被判斷為True，即可判斷整個式子為True，則不判斷右邊的式子</p>
+<h2 id="位元與位移運算"><a href="#位元與位移運算" class="headerlink" title="位元與位移運算"></a>位元與位移運算</h2><p>在數位邏輯設計中，有AND、OR、NOT、XOR等運算，在C語言裡面稱為位元運算子</p>
+<p>C語言提供AND(&amp;)、OR(|)、NOT(!)、XOR(^)與一補數(~)等運算</p>
+<p>以下為位元運算子範例程式</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;AND運算：\n&quot;</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;0 AND 0\t\t%d\n&quot;</span>, <span class="number">0</span> &amp; <span class="number">0</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;0 AND 1\t\t%d\n&quot;</span>, <span class="number">0</span> &amp; <span class="number">1</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;1 AND 0\t\t%d\n&quot;</span>, <span class="number">1</span> &amp; <span class="number">0</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;1 AND 1\t\t%d\n\n&quot;</span>, <span class="number">1</span> &amp; <span class="number">1</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;OR運算：\n&quot;</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;0 OR 0\t\t%d\n&quot;</span>, <span class="number">0</span> | <span class="number">0</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;0 OR 1\t\t%d\n&quot;</span>, <span class="number">0</span> | <span class="number">1</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;1 OR 0\t\t%d\n&quot;</span>, <span class="number">1</span> | <span class="number">0</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;1 OR 1\t\t%d\n\n&quot;</span>, <span class="number">1</span> | <span class="number">1</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;XOR運算：\n&quot;</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;0 XOR 0\t\t%d\n&quot;</span>, <span class="number">0</span> ^ <span class="number">0</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;0 XOR 1\t\t%d\n&quot;</span>, <span class="number">0</span> ^ <span class="number">1</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;1 XOR 0\t\t%d\n&quot;</span>, <span class="number">1</span> ^ <span class="number">0</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;1 XOR 1\t\t%d\n\n&quot;</span>, <span class="number">1</span> ^ <span class="number">1</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;NOT運算：\n&quot;</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;NOT 0\t\t%d\n&quot;</span>, !<span class="number">0</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;NOT 1\t\t%d\n&quot;</span>, !<span class="number">1</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;一補數運算：\n&quot;</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;~0\t\t%d\n&quot;</span>, ~<span class="number">0</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以下為執行結果</p>
+<pre><code>AND運算：
+0 AND 0         0
+0 AND 1         0
+1 AND 0         0
+1 AND 1         1
+
+OR運算：
+0 OR 0          0
+0 OR 1          1
+1 OR 0          1
+1 OR 1          1
+
+XOR運算：
+0 XOR 0         0
+0 XOR 1         1
+1 XOR 0         1
+1 XOR 1         0
+
+NOT運算：
+NOT 0           1
+NOT 1           0
+
+一補數運算：
+~0              -1</code></pre>
+<p>另外位移運算在計算機概論的<a href="http://gundambox.github.io/2015/10/15/%E9%82%8F%E8%BC%AF%E9%81%8B%E7%AE%97/#%E4%BD%8D%E7%A7%BB%E9%81%8B%E7%AE%97">邏輯運算</a>中有提到</p>
+<p>C語言提供的語法為&lt;&lt;(左移)、&gt;&gt;(右移)，採算術位移</p>
+<p>以下為位移運算子的範例程式</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line"> 	<span class="built_in">printf</span>(<span class="string">&quot;10&gt;&gt;1\t%d\n&quot;</span>,<span class="number">10</span>&gt;&gt;<span class="number">1</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;10&lt;&lt;1\t%d\n&quot;</span>,<span class="number">10</span>&lt;&lt;<span class="number">1</span>);</span><br><span class="line"> </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;-20&gt;&gt;1\t%d\n&quot;</span>,<span class="number">-20</span>&gt;&gt;<span class="number">1</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;-20&lt;&lt;1\t%d\n&quot;</span>,<span class="number">-20</span>&lt;&lt;<span class="number">1</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以下為執行結果</p>
+<pre><code>10&gt;&gt;1   5
+10&lt;&lt;1   20
+-20&gt;&gt;1  -10
+-20&lt;&lt;1  -40</code></pre>
+<h2 id="遞增、遞減運算"><a href="#遞增、遞減運算" class="headerlink" title="遞增、遞減運算"></a>遞增、遞減運算</h2><p>程式在運算裡面最常做的事情是+1或-1，例如數東西</p>
+<p>而C語言提供了遞增(++)跟遞減(–)運算子方便撰寫程式</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, ++i);<span class="comment">// ++i 等同於 i = i + 1 </span></span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, --i);<span class="comment">// --i 等同於 i = i - 1</span></span><br></pre></td></tr></table></figure>
+
+<p>以上三行的執行結果是1與0</p>
+<p>但是這兩個運算子有個特性要注意，變數放在前後會影響運算順序</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">int</span> num = <span class="number">0</span>;</span><br><span class="line">num = ++i;   <span class="comment">// 相當於i = i + 1; num = i;</span></span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span> ,num);</span><br><span class="line">num = --i;    <span class="comment">// 相當於i = i - 1; num = i;</span></span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span> ,num);</span><br></pre></td></tr></table></figure>
+
+<p>上面這段程式碼的執行結果是1與0</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">int</span> num = <span class="number">0</span>;</span><br><span class="line">num = i++;    <span class="comment">// 相當於num = i; i = i + 1;</span></span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, num);</span><br><span class="line">num = i--;     <span class="comment">// 相當於 num = i; i = i - 1;</span></span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, num);</span><br></pre></td></tr></table></figure>
+
+<p>上面這段程式碼的執行結果是0與1</p>
+<p>也就是說如果變數在左邊，遞增的運算順序會小於指定</p>
+<p>變數如果在右邊，遞增的運算順序會大於指定</p>
+<h2 id="指定運算"><a href="#指定運算" class="headerlink" title="指定運算"></a>指定運算</h2><p>除了我們看過的’=’以外，還有下列幾個運算子，都是為了方便撰寫程式而產生的</p>
+<table>
+<thead>
+<tr>
+<th>運算子</th>
+<th>例子</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>+=</td>
+<td>a += b</td>
+<td>a = a + b</td>
+</tr>
+<tr>
+<td>-=</td>
+<td>a -= b</td>
+<td>a = a - b</td>
+</tr>
+<tr>
+<td>*=</td>
+<td>a *= b</td>
+<td>a = a * b</td>
+</tr>
+<tr>
+<td>/=</td>
+<td>a /= b</td>
+<td>a = a / b</td>
+</tr>
+<tr>
+<td>%=</td>
+<td>a %= b</td>
+<td>a = a % b</td>
+</tr>
+<tr>
+<td>&amp;=</td>
+<td>a &amp;= b</td>
+<td>a = a &amp; b</td>
+</tr>
+<tr>
+<td>&#124;=</td>
+<td>a &#124;= b</td>
+<td>a = a &#124; b</td>
+</tr>
+<tr>
+<td>^=</td>
+<td>a ^= b</td>
+<td>a = a ^ b</td>
+</tr>
+<tr>
+<td>&lt;&lt;=</td>
+<td>a &lt;&lt;= b</td>
+<td>a = a &lt;&lt; b</td>
+</tr>
+</tbody></table>
+<blockquote>
+<blockquote>
+<p>=        |    a &gt;&gt;= b        |    a = a &gt;&gt; b </p>
+</blockquote>
+</blockquote>
+<h1 id="參考"><a href="#參考" class="headerlink" title="參考"></a>參考</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/C%E8%AF%AD%E8%A8%80">C語言</a></li>
+<li><a target="_blank" rel="noopener" href="http://openhome.cc/Gossip/CGossip/Datatype.html">資料型態（Data type</a></li>
+<li><a target="_blank" rel="noopener" href="http://openhome.cc/Gossip/CGossip/LiteralConstant.html">字面常量（Literal Constant）</a></li>
+<li><a target="_blank" rel="noopener" href="http://openhome.cc/Gossip/CGossip/Variable.html">變數（Variable）</a></li>
+<li><a target="_blank" rel="noopener" href="http://openhome.cc/Gossip/CGossip/ArithmeticType%20conversion.html">算術（Arithmetic）運算、型態轉換（Type conversion）</a></li>
+<li><a target="_blank" rel="noopener" href="http://openhome.cc/Gossip/CGossip/RelationalConditional.html">關係（Relational）運算、條件（Conditional）運算</a></li>
+<li><a target="_blank" rel="noopener" href="http://openhome.cc/Gossip/CGossip/LogicalBitwise.html">邏輯（Logical）運算、位元（Bitwise）運算</a></li>
+<li><a target="_blank" rel="noopener" href="http://openhome.cc/Gossip/CGossip/IncrementDecrementAssignment.html">遞增（Increment）、遞減（Decrement）、指定（Assignment）運算</a></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+  <div class="followme">
+    <span>歡迎關注我的其它發布渠道</span>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+          <div class="post-tags">
+              <a href="/tags/C%E8%AA%9E%E8%A8%80/" rel="tag"># C語言</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2015/10/17/C%E8%AA%9E%E8%A8%80-Hello-World/" rel="prev" title="C語言-Hello World">
+                  <i class="fa fa-chevron-left"></i> C語言-Hello World
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2015/10/19/C%E8%AA%9E%E8%A8%80-%E8%BC%B8%E5%85%A5%E8%88%87%E8%BC%B8%E5%87%BA/" rel="next" title="C語言-輸入與輸出">
+                  C語言-輸入與輸出 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+      
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gundambox</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="總字數">106k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="所需總閱讀時間">1:36</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 強力驅動
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/@next-theme/pjax@0.4.0/pjax.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '.page-configurations',
+    '.main-inner',
+    '.post-toc-wrap',
+    '.languages',
+    '.pjax'
+  ],
+  analytics: false,
+  cacheBust: false,
+  scrollRestoration: false,
+  scrollTo: !CONFIG.bookmark.enable
+});
+
+document.addEventListener('pjax:success', () => {
+  pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  const hasTOC = document.querySelector('.post-toc');
+  document.querySelector('.sidebar-inner').classList.toggle('sidebar-nav-active', hasTOC);
+  document.querySelector(hasTOC ? '.sidebar-nav-toc' : '.sidebar-nav-overview').click();
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+    <div class="pjax">
+  
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://gundambox.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://gundambox.github.io/2015/10/19/C%E8%AA%9E%E8%A8%80-%E8%B3%87%E6%96%99%E5%9E%8B%E6%85%8B%E8%88%87%E8%AE%8A%E6%95%B8%E9%81%8B%E7%AE%97/";
+    this.page.identifier = "2015/10/19/C語言-資料型態與變數運算/";
+    this.page.title = "C語言-資料型態與變數運算";
+    };
+  NexT.utils.loadComments('#disqus_thread', () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://gundambox.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+    </div>
+</body>
+</html>

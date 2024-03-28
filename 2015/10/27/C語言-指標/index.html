@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"gundambox.github.io","root":"/","scheme":"Gemini","version":"8.0.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"width":300,"onmobile":false},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"prism":false,"i18n":{"placeholder":"搜尋...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+
+  <meta name="description" content="這篇在講C語言的指標，以及如何使用記憶體(?)XD">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C語言-指標">
+<meta property="og:url" content="http://gundambox.github.io/2015/10/27/C%E8%AA%9E%E8%A8%80-%E6%8C%87%E6%A8%99/index.html">
+<meta property="og:site_name" content="鋼彈盪單槓">
+<meta property="og:description" content="這篇在講C語言的指標，以及如何使用記憶體(?)XD">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2015-10-27T08:23:01.000Z">
+<meta property="article:modified_time" content="2024-03-28T00:43:41.556Z">
+<meta property="article:author" content="Gundambox">
+<meta property="article:tag" content="C語言">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://gundambox.github.io/2015/10/27/C%E8%AA%9E%E8%A8%80-%E6%8C%87%E6%A8%99/">
+
+
+<script data-pjax class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-TW'
+  };
+</script>
+
+  <title>C語言-指標 | 鋼彈盪單槓</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="鋼彈盪單槓" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">鋼彈盪單槓</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">鋼彈的 coding 筆記</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>關於</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>標籤</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分類</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>歸檔</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜尋
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜尋..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8C%87%E6%A8%99%E8%88%87%E9%81%8B%E7%AE%97"><span class="nav-number">1.</span> <span class="nav-text">指標與運算</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%82%B3%E6%8C%87%E6%A8%99%E7%B5%A6%E5%87%BD%E6%95%B8"><span class="nav-number">2.</span> <span class="nav-text">傳指標給函數</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8C%87%E6%A8%99%E8%88%87%E9%99%A3%E5%88%97"><span class="nav-number">3.</span> <span class="nav-text">指標與陣列</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8C%87%E6%A8%99%E8%88%87%E5%AD%97%E4%B8%B2"><span class="nav-number">4.</span> <span class="nav-text">指標與字串</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8B%95%E6%85%8B%E8%A8%98%E6%86%B6%E9%AB%94%E9%85%8D%E7%BD%AE"><span class="nav-number">5.</span> <span class="nav-text">動態記憶體配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9B%99%E9%87%8D%E6%8C%87%E6%A8%99"><span class="nav-number">6.</span> <span class="nav-text">雙重指標</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%87%BD%E6%95%B8%E6%8C%87%E6%A8%99"><span class="nav-number">7.</span> <span class="nav-text">函數指標</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%83%E8%80%83"><span class="nav-number">8.</span> <span class="nav-text">參考</span></a></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Gundambox"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Gundambox</p>
+  <div class="site-description" itemprop="description">什麼都碰，什麼都會，什麼都不會的鋼彈</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">40</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="http://gundambox.github.io/" title="GitHub → http:&#x2F;&#x2F;gundambox.github.io"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </section>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="http://gundambox.github.io/2015/10/27/C%E8%AA%9E%E8%A8%80-%E6%8C%87%E6%A8%99/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Gundambox">
+      <meta itemprop="description" content="什麼都碰，什麼都會，什麼都不會的鋼彈">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="鋼彈盪單槓">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          C語言-指標
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">發表於</span>
+
+      <time title="創建時間：2015-10-27 16:23:01" itemprop="dateCreated datePublished" datetime="2015-10-27T16:23:01+08:00">2015-10-27</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新於</span>
+        <time title="修改時間：2024-03-28 08:43:41" itemprop="dateModified" datetime="2024-03-28T08:43:41+08:00">2024-03-28</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分類於</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/C%E8%AA%9E%E8%A8%80/" itemprop="url" rel="index"><span itemprop="name">C語言</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2015/10/27/C%E8%AA%9E%E8%A8%80-%E6%8C%87%E6%A8%99/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/10/27/C語言-指標/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="文章字數">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">文章字數：</span>
+      <span>8.3k</span>
+    </span>
+    <span class="post-meta-item" title="所需閱讀時間">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">所需閱讀時間 &asymp;</span>
+      <span>8 分鐘</span>
+    </span>
+</div>
+
+            <div class="post-description">這篇在講C語言的指標，以及如何使用記憶體(?)XD</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="指標與運算"><a href="#指標與運算" class="headerlink" title="指標與運算"></a>指標與運算</h1><p>變數除了它儲存的數值以外，還有記憶體位址，下面是示範程式</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">int</span> var = <span class="number">10</span>; </span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;var 的值：%d\n&quot;</span>, var);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;var 的記憶體位址：%X\n&quot;</span>, &amp;var);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>執行結果</p>
+<pre><code>var 的值：10
+var 的記憶體位址：22FE4C</code></pre>
+<p>一般變數提供對記憶體空間的直接存取，指標變數則提供間接存取</p>
+<p>指標可以指向特定的記憶體位址而不直接操作到變數</p>
+<p>指標變數的宣告語法如下</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">變數型態 *變數名稱;</span><br></pre></td></tr></table></figure>
+
+<p>指標變數可以透過取址運算子&amp;來指定，下面是示範程式</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">int</span> var = <span class="number">10</span>; </span><br><span class="line">    <span class="keyword">int</span> *ptr = &amp;var; <span class="comment">// 取得var的記憶體位址，讓ptr指向這位址</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;var 的位址：%X\n&quot;</span>, &amp;var);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;var 的值：%d\n&quot;</span>, var);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;ptr 指向的位址：%X\n&quot;</span>, ptr);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;ptr 指向的位址的值：%d\n&quot;</span>, *ptr); </span><br><span class="line">    <span class="comment">// &#x27;*&#x27;運算子除了乘法以外，也當作取值運算子，負責取出記憶體位址裡的值</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>執行結果</p>
+<pre><code>var 的位址：22FE44
+var 的值：10
+ptr 指向的位址：22FE44
+ptr 指向的位址的值：10</code></pre>
+<p>當指標指向每個記憶體位址之後，如果你指定某個值給*ptr，被指向的值也會被改變</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">int</span> var = <span class="number">100</span>; </span><br><span class="line">    <span class="keyword">int</span> *ptr = &amp;var ; </span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;var = %d\n&quot;</span>, var);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;*ptr = %d\n&quot;</span>, *ptr);</span><br><span class="line"></span><br><span class="line">    *ptr = <span class="number">200</span>; </span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;var = %d\n&quot;</span>, var);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;*ptr = %d\n&quot;</span>, *ptr);</span><br><span class="line">             </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>執行結果</p>
+<pre><code>var = 100
+*ptr = 100
+var = 200
+*ptr = 200</code></pre>
+<p>指標如果指向不明的記憶體位址是危險的，有可能造成程式爆炸，所以指定初始值是安全的作法</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> *ptr = <span class="literal">NULL</span>; <span class="comment">// 指向空指標</span></span><br></pre></td></tr></table></figure>
+
+<p>NULL是透過#define定義為0的常數</p>
+<p>#define會在之後的章節提到</p>
+<p>另外新手可能會以為以下語法是宣告兩個指標變數</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span>* ptr1,ptr2;</span><br></pre></td></tr></table></figure>
+
+<p>而實際上要宣告兩個指標變數要這樣寫</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> *ptr1,*ptr2;</span><br></pre></td></tr></table></figure>
+
+<p>如果只打算拿記憶體位址做運算，不會牽涉到型態問題，可以使用void指標</p>
+<pre><code>void *ptr;</code></pre>
+<p>因為void指標只儲存位址資訊，所以不能直接提取資料，必須先轉換型態，例如：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">int</span> num = <span class="number">10</span>; </span><br><span class="line">    <span class="keyword">void</span> *ptr = &amp;num ; </span><br><span class="line"> </span><br><span class="line">    <span class="comment">// 下面這句不可行，void型態指標不可取值 </span></span><br><span class="line">    <span class="comment">// printf(&quot;%d\n&quot;, *ptr);</span></span><br><span class="line"> </span><br><span class="line">    <span class="comment">// 轉型為int型態指標並指定給iptr </span></span><br><span class="line">    <span class="keyword">int</span> *iptr = (<span class="keyword">int</span>*) ptr;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, *iptr);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>執行結果</p>
+<pre><code>10</code></pre>
+<p>除了指定運算子、取址運算子與取值運算子，指標還可以使用+、-、++、–、+=與-=等運算子</p>
+<p>指標的加減法與一般數值的加減法不同，指標加1代表往後一個資料型態的長度</p>
+<p>例如int指標加1表示記憶體位址加4位元組，double指標則加8位元組</p>
+<p>減法則是往前N個資料型態的長度，下面是double指標的範例程式</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">double</span> num = <span class="number">10</span>;</span><br><span class="line">    <span class="keyword">double</span> *ptr = &amp;num;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;ptr 位置：%d\n&quot;</span>, ptr);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;ptr + 1：%d\n&quot;</span>, ptr + <span class="number">1</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;ptr + 2：%d\n&quot;</span>, ptr + <span class="number">2</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>執行結果</p>
+<pre><code>ptr 位置：2293312
+ptr + 1：2293320
+ptr + 2：2293328</code></pre>
+<h1 id="傳指標給函數"><a href="#傳指標給函數" class="headerlink" title="傳指標給函數"></a>傳指標給函數</h1><p>C語言的函數呼叫都是傳值呼叫(Call by value)，也就是每次呼叫時都複製一份給函數</p>
+<p>但是因為區域變數的關係，變數離開當前區域就失去效力了</p>
+<p>如果想要傳參數給函數並且真正修改到變數的值的話，就必須靠傳址呼叫(Call by address)了</p>
+<p>下面將透過交換兩個數字的函數說明傳值呼叫</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">swap</span><span class="params">(<span class="keyword">int</span>,<span class="keyword">int</span>)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">int</span> num1 = <span class="number">10</span>,num2 = <span class="number">20</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;交換前：%d %d\n&quot;</span>,num1,num2);</span><br><span class="line">    swap(num1,num2);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;交換後：%d %d\n&quot;</span>,num1,num2);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">swap</span><span class="params">(<span class="keyword">int</span> a,<span class="keyword">int</span> b)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> c = a;</span><br><span class="line">    a = b;</span><br><span class="line">    b = c;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>執行結果</p>
+<pre><code>交換前：10 20
+交換後：10 20</code></pre>
+<p>下面將透過交換兩個數字的函數說明傳址呼叫</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">swap</span><span class="params">(<span class="keyword">int</span>*,<span class="keyword">int</span>*)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">int</span> num1 = <span class="number">10</span>,num2 = <span class="number">20</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;交換前：%d %d\n&quot;</span>,num1,num2);</span><br><span class="line">    swap(&amp;num1,&amp;num2);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;交換後：%d %d\n&quot;</span>,num1,num2);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">swap</span><span class="params">(<span class="keyword">int</span> *a,<span class="keyword">int</span> *b)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> c = *a;</span><br><span class="line">    *a = *b;</span><br><span class="line">    *b = c;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>執行結果</p>
+<pre><code>交換前：10 20
+交換後：20 10</code></pre>
+<h1 id="指標與陣列"><a href="#指標與陣列" class="headerlink" title="指標與陣列"></a>指標與陣列</h1><p>其實陣列就是指標的應用，陣列名稱就是指向陣列第一個元素的指標，以下是範例程式</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">int</span> arr[<span class="number">10</span>] = &#123;<span class="number">0</span>&#125;; </span><br><span class="line">    </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;arr :\t\t%X\n&quot;</span>, arr);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;&amp;arr[0] :\t%X\n&quot;</span>, &amp;arr[<span class="number">0</span>]);</span><br><span class="line">             </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>執行結果</p>
+<pre><code>arr :           22FE20
+&amp;arr[0] :       22FE20</code></pre>
+<p>陣列的索引值其實是相對於開頭的位移量，所以第一個元素是0，表示位移量是0</p>
+<p>以下是索引值的範例程式</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">int</span> arr[<span class="number">10</span>] = &#123;<span class="number">0</span>&#125;; </span><br><span class="line">    <span class="keyword">int</span> *ptr = arr; </span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123; </span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;&amp;arr[%d]: %X&quot;</span>, i ,&amp;arr[i]); </span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;\t\tptr + %d: %X\n&quot;</span>, i, ptr + i);</span><br><span class="line">    &#125; </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>執行結果</p>
+<pre><code>&amp;arr[0]: 22FE10         ptr + 0: 22FE10
+&amp;arr[1]: 22FE14         ptr + 1: 22FE14
+&amp;arr[2]: 22FE18         ptr + 2: 22FE18
+&amp;arr[3]: 22FE1C         ptr + 3: 22FE1C
+&amp;arr[4]: 22FE20         ptr + 4: 22FE20
+&amp;arr[5]: 22FE24         ptr + 5: 22FE24
+&amp;arr[6]: 22FE28         ptr + 6: 22FE28
+&amp;arr[7]: 22FE2C         ptr + 7: 22FE2C
+&amp;arr[8]: 22FE30         ptr + 8: 22FE30
+&amp;arr[9]: 22FE34         ptr + 9: 22FE34</code></pre>
+<p>以下範例程式用來說明陣列跟指標的關係</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">int</span> arr[<span class="number">5</span>] = &#123;<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>, <span class="number">40</span>, <span class="number">50</span>&#125;; </span><br><span class="line">    <span class="keyword">int</span> *ptr = arr; </span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 以指標方式存取資料 </span></span><br><span class="line">    <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;*(ptr + %d): %d\n&quot;</span>, i , *(ptr + i));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 以陣列方式存取資料 </span></span><br><span class="line">    <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;ptr[%d]: %d\n&quot;</span>, i, ptr[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 以指標方式存取資料 </span></span><br><span class="line">    <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;*(arr + %d): %d\n&quot;</span>, i , *(arr + i));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;&quot;</span>);</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// 以陣列方式存取資料 </span></span><br><span class="line">    <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;arr[%d]: %d\n&quot;</span>, i, arr[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;&quot;</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>執行結果</p>
+<pre><code>*(ptr + 0): 10
+*(ptr + 1): 20
+*(ptr + 2): 30
+*(ptr + 3): 40
+*(ptr + 4): 50
+
+ptr[0]: 10
+ptr[1]: 20
+ptr[2]: 30
+ptr[3]: 40
+ptr[4]: 50
+
+*(arr + 0): 10
+*(arr + 1): 20
+*(arr + 2): 30
+*(arr + 3): 40
+*(arr + 4): 50
+
+arr[0]: 10
+arr[1]: 20
+arr[2]: 30
+arr[3]: 40
+arr[4]: 50</code></pre>
+<h1 id="指標與字串"><a href="#指標與字串" class="headerlink" title="指標與字串"></a>指標與字串</h1><p>字元指標可以指向一個字串常數，該字串常數會佔有一個記憶體空間，以下是示範程式</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">char</span> *str = <span class="string">&quot;hell&quot;</span>; </span><br><span class="line">    <span class="keyword">char</span> *add = <span class="number">0</span>; </span><br><span class="line"></span><br><span class="line">    add = str;  </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%s\t%X\n&quot;</span>, str, add);</span><br><span class="line"></span><br><span class="line">    str = <span class="string">&quot;world&quot;</span>; </span><br><span class="line">    add = str; </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%s\t%X\n&quot;</span>, str, add);</span><br><span class="line">            </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>執行結果</p>
+<pre><code>hell    404000
+world    40400C</code></pre>
+<p>可以看到兩個字串不同記憶體位址</p>
+<p>但是要注意的是，如果使用陣列的方式宣告字串，是無法使用=指定運算子的</p>
+<p>宣告陣列使用的空間是固定的，但是指標指定的字串長度可以不固定</p>
+<h1 id="動態記憶體配置"><a href="#動態記憶體配置" class="headerlink" title="動態記憶體配置"></a>動態記憶體配置</h1><p>到目前為止，我們使用的都是先宣告好要使用什麼變數，程式執行時就配置好記憶體</p>
+<p>但是有時候要程式執行到一半才知道需要多少記憶體，這時候就要使用malloc函數</p>
+<p>下面這個語法會以動態的方式配置一個int型態大小的記憶體給ptr變數</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> *ptr = <span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">int</span>));</span><br></pre></td></tr></table></figure>
+
+<p>但是這語法只配置空間，不會初始化變數的值</p>
+<p>而動態配置的記憶體在程式結束前並不會<strong>自動</strong>歸還空間，所以必須需要使用free函數歸還記憶體</p>
+<p>以下是陣列動態配置的範例程式</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt; // malloc跟free都定義在這 </span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">int</span> size = <span class="number">0</span>; </span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;請輸入陣列長度：&quot;</span>); </span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, &amp;size); </span><br><span class="line">    <span class="keyword">int</span> *arr = <span class="built_in">malloc</span>(size * <span class="keyword">sizeof</span>(<span class="keyword">int</span>)); <span class="comment">// 配置記憶體 </span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;顯示元素值：\n&quot;</span>);</span><br><span class="line">    <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; size; i++) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;arr[%d] = %d\n&quot;</span>, i, *(arr+i));</span><br><span class="line">    &#125; </span><br><span class="line">        </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;指定元素值：\n&quot;</span>); </span><br><span class="line">    <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; size; i++) &#123; </span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;arr[%d] = &quot;</span>, i); </span><br><span class="line">        <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span> , arr + i); </span><br><span class="line">    &#125; </span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;顯示元素值：\n&quot;</span>);</span><br><span class="line">    <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; size; i++) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;arr[%d] = %d\n&quot;</span>, i, *(arr+i));</span><br><span class="line">    &#125; </span><br><span class="line"></span><br><span class="line">    <span class="built_in">free</span>(arr); <span class="comment">// 歸還空間 </span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>執行結果</p>
+<pre><code>請輸入陣列長度：5
+顯示元素值：
+arr[0] = 7952432
+arr[1] = 0
+arr[2] = 7930200
+arr[3] = 0
+arr[4] = 0
+指定元素值：
+arr[0] = 1
+arr[1] = 2
+arr[2] = 3
+arr[3] = 4
+arr[4] = 5
+顯示元素值：
+arr[0] = 1
+arr[1] = 2
+arr[2] = 3
+arr[3] = 4
+arr[4] = 5</code></pre>
+<h1 id="雙重指標"><a href="#雙重指標" class="headerlink" title="雙重指標"></a>雙重指標</h1><p>雙重指標簡單講就是指向指標的指標，指標指向一般變數，雙重指標則指向指標變數</p>
+<p>以下是範例程式</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">int</span> p = <span class="number">10</span>; </span><br><span class="line">    <span class="keyword">int</span> *ptr1 = &amp;p; </span><br><span class="line">    <span class="keyword">int</span> **ptr2 = &amp;ptr1; </span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;p\t%d\n&quot;</span>, p);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;&amp;p\t%X\n\n&quot;</span>, &amp;p); </span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;*ptr1\t%d\n&quot;</span>, *ptr1); </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;ptr1\t%X\n&quot;</span>, ptr1); </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;&amp;ptr1\t%X\n\n&quot;</span>, &amp;ptr1); </span><br><span class="line"> </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;**ptr2\t%d\n&quot;</span>, **ptr2); </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;*ptr2\t%X\n&quot;</span>, *ptr2);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;ptr2\t%X\n&quot;</span>, ptr2);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;&amp;ptr2\t%X\n\n&quot;</span>, &amp;ptr2); </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>執行結果</p>
+<pre><code>p       10
+&amp;p      22FE4C
+
+*ptr1   10
+ptr1    22FE4C
+&amp;ptr1   22FE40
+
+**ptr2  10
+*ptr2   22FE4C
+ptr2    22FE40
+&amp;ptr2   22FE38</code></pre>
+<p>可以看得出來，ptr1指向了p的位址，而ptr2指向了ptr1的位址</p>
+<p>雙重指標的使用時機通常用於傳回指標</p>
+<p>例如想將函數裡面配置的記憶體空間取出來，以下是範例程式</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">new_int_array</span><span class="params">(<span class="keyword">int</span>,<span class="keyword">int</span>**)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">int</span>* arr_ptr = <span class="literal">NULL</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span>(new_int_array(<span class="number">5</span>,&amp;arr_ptr))&#123; <span class="comment">// 如果有配置成功的話 </span></span><br><span class="line">    </span><br><span class="line">        <span class="keyword">int</span> i;</span><br><span class="line">        <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++)</span><br><span class="line">        	arr_ptr[i] = i+<span class="number">1</span>;</span><br><span class="line">        	</span><br><span class="line">        <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++)</span><br><span class="line">        	<span class="built_in">printf</span>(<span class="string">&quot;%d &quot;</span>,arr_ptr[i]);</span><br><span class="line">        <span class="built_in">puts</span>(<span class="string">&quot;&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">new_int_array</span><span class="params">(<span class="keyword">int</span> length, <span class="keyword">int</span>** arr_ptr)</span></span>&#123;</span><br><span class="line">    </span><br><span class="line">   <span class="keyword">int</span>* pData = (<span class="keyword">int</span>*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">int</span>)*length);</span><br><span class="line">   </span><br><span class="line">   <span class="keyword">if</span> (pData == <span class="literal">NULL</span>)&#123; <span class="comment">// malloc配置失敗會回傳NULL</span></span><br><span class="line">   	</span><br><span class="line">     *arr_ptr = <span class="literal">NULL</span>;</span><br><span class="line">     <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">//配置失敗</span></span><br><span class="line">     </span><br><span class="line">   &#125;</span><br><span class="line">   *arr_ptr = pData;</span><br><span class="line">   <span class="keyword">return</span> <span class="number">1</span>; <span class="comment">// 配置成功</span></span><br><span class="line">   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>執行結果</p>
+<pre><code>1 2 3 4 5</code></pre>
+<h1 id="函數指標"><a href="#函數指標" class="headerlink" title="函數指標"></a>函數指標</h1><p>程式在執行時，函數本身也在記憶體中佔有一段空間，而函數名稱則指向該記憶體空間</p>
+<p>當呼叫函數的時候，程式就會去執行所指向的記憶體空間中的指令</p>
+<p>指標也可以指向函數，語法如下</p>
+<pre><code>回傳值型態 (*指標名稱)(參數列);</code></pre>
+<p>函數型態由回傳值型態與參數列決定，不包括函式名稱</p>
+<p>一個函數指標可指向具有相同型態的函式，也就是具有相同回傳值型態和參數列的函數</p>
+<p>下面示範程式裡面，ptr指向func函數，可以看到ptr跟func有相同功效</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">func</span><span class="params">(<span class="keyword">int</span>)</span></span>; </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> (*ptr)() = <span class="number">0</span>; </span><br><span class="line"></span><br><span class="line">    ptr = func; </span><br><span class="line"></span><br><span class="line">    func(<span class="number">5</span>); </span><br><span class="line">    ptr(<span class="number">5</span>); </span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;address of foo:%X\n&quot;</span>, (<span class="keyword">int</span>) func);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;address of foo:%X\n&quot;</span>, (<span class="keyword">int</span>) ptr);</span><br><span class="line">           </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">func</span><span class="params">(<span class="keyword">int</span> num)</span> </span>&#123; </span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Print:%d\n&quot;</span>,num); </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>; </span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>執行結果</p>
+<pre><code>Print:5
+Print:5
+address of foo:401597
+address of foo:401597</code></pre>
+<p>函數指標的優點在於彈性</p>
+<p>例如以下程式碼使用了函數指標，省去了switch的麻煩</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">func1</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">func2</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">func3</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">func4</span><span class="params">()</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">func5</span><span class="params">()</span></span>; </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">void</span> (*key[<span class="number">5</span>])() = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">    </span><br><span class="line">    key[<span class="number">0</span>] = func1;</span><br><span class="line">    key[<span class="number">1</span>] = func2;</span><br><span class="line">    key[<span class="number">2</span>] = func3;</span><br><span class="line">    key[<span class="number">3</span>] = func4;</span><br><span class="line">    key[<span class="number">4</span>] = func5;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>)&#123;</span><br><span class="line">        <span class="keyword">char</span> c = getch();</span><br><span class="line">        <span class="keyword">if</span>(c&gt;=<span class="string">&#x27;1&#x27;</span>&amp;&amp;c&lt;=<span class="string">&#x27;5&#x27;</span>) key[c-<span class="string">&#x27;1&#x27;</span>]();</span><br><span class="line">    &#125;</span><br><span class="line">   	</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">func1</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;你按了1&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">func2</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;你按了2&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">func3</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;你按了3&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">func4</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;你按了4&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">func5</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;你按了5&quot;</span>);</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+
+<h1 id="參考"><a href="#參考" class="headerlink" title="參考"></a>參考</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/C%E8%AF%AD%E8%A8%80">C語言</a></li>
+<li><a target="_blank" rel="noopener" href="http://openhome.cc/Gossip/CGossip/Pointer.html">指標與記憶體位址</a></li>
+<li><a target="_blank" rel="noopener" href="http://openhome.cc/Gossip/CGossip/PointerArithmetic.html">指標的運算</a></li>
+<li><a target="_blank" rel="noopener" href="http://openhome.cc/Gossip/CGossip/PointerAndArray.html">指標與陣列</a></li>
+<li><a target="_blank" rel="noopener" href="http://openhome.cc/Gossip/CGossip/PointerAndString.html">指標與字串</a></li>
+<li><a target="_blank" rel="noopener" href="http://openhome.cc/Gossip/CGossip/MallocFree.html">malloc()、free()、calloc() 與 realloc()</a></li>
+<li><a target="_blank" rel="noopener" href="http://openhome.cc/Gossip/CGossip/DoublePointer.html">雙重指標</a></li>
+<li><a target="_blank" rel="noopener" href="http://imil.au.edu.tw/~hsichcl/TurboC/C_Unit10.htm">陣 列 與 指 標</a></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+  <div class="followme">
+    <span>歡迎關注我的其它發布渠道</span>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+          <div class="post-tags">
+              <a href="/tags/C%E8%AA%9E%E8%A8%80/" rel="tag"># C語言</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2015/10/23/C%E8%AA%9E%E8%A8%80-%E9%99%A3%E5%88%97%E8%88%87%E5%AD%97%E4%B8%B2/" rel="prev" title="C語言-陣列與字串">
+                  <i class="fa fa-chevron-left"></i> C語言-陣列與字串
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2015/10/30/C%E8%AA%9E%E8%A8%80-struct%E3%80%81union%E3%80%81enum/" rel="next" title="C語言-struct、union、enum">
+                  C語言-struct、union、enum <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+      
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gundambox</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="總字數">106k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="所需總閱讀時間">1:36</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 強力驅動
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/@next-theme/pjax@0.4.0/pjax.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '.page-configurations',
+    '.main-inner',
+    '.post-toc-wrap',
+    '.languages',
+    '.pjax'
+  ],
+  analytics: false,
+  cacheBust: false,
+  scrollRestoration: false,
+  scrollTo: !CONFIG.bookmark.enable
+});
+
+document.addEventListener('pjax:success', () => {
+  pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  const hasTOC = document.querySelector('.post-toc');
+  document.querySelector('.sidebar-inner').classList.toggle('sidebar-nav-active', hasTOC);
+  document.querySelector(hasTOC ? '.sidebar-nav-toc' : '.sidebar-nav-overview').click();
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+    <div class="pjax">
+  
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://gundambox.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://gundambox.github.io/2015/10/27/C%E8%AA%9E%E8%A8%80-%E6%8C%87%E6%A8%99/";
+    this.page.identifier = "2015/10/27/C語言-指標/";
+    this.page.title = "C語言-指標";
+    };
+  NexT.utils.loadComments('#disqus_thread', () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://gundambox.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"gundambox.github.io","root":"/","scheme":"Gemini","version":"8.0.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"width":300,"onmobile":false},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"prism":false,"i18n":{"placeholder":"搜尋...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+
+  <meta name="description" content="在寫C語言筆記之前，我覺得要先建立一些數字的概念，所以我就挑了大學時候的計算機概論，擷取一些我覺得重要的地方來講囉">
+<meta property="og:type" content="article">
+<meta property="og:title" content="計算機概論-數字系統">
+<meta property="og:url" content="http://gundambox.github.io/2015/10/08/%E8%A8%88%E7%AE%97%E6%A9%9F%E6%A6%82%E8%AB%96-%E6%95%B8%E5%AD%97%E7%B3%BB%E7%B5%B1/index.html">
+<meta property="og:site_name" content="鋼彈盪單槓">
+<meta property="og:description" content="在寫C語言筆記之前，我覺得要先建立一些數字的概念，所以我就挑了大學時候的計算機概論，擷取一些我覺得重要的地方來講囉">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2015-10-08T11:48:33.000Z">
+<meta property="article:modified_time" content="2024-03-28T00:43:41.556Z">
+<meta property="article:author" content="Gundambox">
+<meta property="article:tag" content="計算機概論">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://gundambox.github.io/2015/10/08/%E8%A8%88%E7%AE%97%E6%A9%9F%E6%A6%82%E8%AB%96-%E6%95%B8%E5%AD%97%E7%B3%BB%E7%B5%B1/">
+
+
+<script data-pjax class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-TW'
+  };
+</script>
+
+  <title>計算機概論-數字系統 | 鋼彈盪單槓</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="鋼彈盪單槓" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">鋼彈盪單槓</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">鋼彈的 coding 筆記</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>關於</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>標籤</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分類</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>歸檔</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜尋
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜尋..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9A%E7%BE%A9"><span class="nav-number">1.</span> <span class="nav-text">定義</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8D%81%E9%80%B2%E4%BD%8D%E7%B3%BB%E7%B5%B1"><span class="nav-number">2.</span> <span class="nav-text">十進位系統</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B4%E6%95%B8"><span class="nav-number">2.1.</span> <span class="nav-text">整數</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%AE%E9%BB%9E%E6%95%B8"><span class="nav-number">2.2.</span> <span class="nav-text">浮點數</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E9%80%B2%E4%BD%8D%E7%B3%BB%E7%B5%B1"><span class="nav-number">3.</span> <span class="nav-text">二進位系統</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B4%E6%95%B8-1"><span class="nav-number">3.1.</span> <span class="nav-text">整數</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%AE%E9%BB%9E%E6%95%B8-1"><span class="nav-number">3.2.</span> <span class="nav-text">浮點數</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%AB%E9%80%B2%E4%BD%8D%E7%B3%BB%E7%B5%B1"><span class="nav-number">4.</span> <span class="nav-text">八進位系統</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B4%E6%95%B8-2"><span class="nav-number">4.1.</span> <span class="nav-text">整數</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%AE%E9%BB%9E%E6%95%B8-2"><span class="nav-number">4.2.</span> <span class="nav-text">浮點數</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8D%81%E5%85%AD%E9%80%B2%E4%BD%8D%E7%B3%BB%E7%B5%B1"><span class="nav-number">5.</span> <span class="nav-text">十六進位系統</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B4%E6%95%B8-3"><span class="nav-number">5.1.</span> <span class="nav-text">整數</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%AE%E9%BB%9E%E6%95%B8-3"><span class="nav-number">5.2.</span> <span class="nav-text">浮點數</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%80%B2%E5%88%B6%E8%BD%89%E6%8F%9B"><span class="nav-number">6.</span> <span class="nav-text">進制轉換</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E9%80%B2%E4%BD%8D%E8%BD%89%E5%8D%81%E9%80%B2%E4%BD%8D"><span class="nav-number">6.1.</span> <span class="nav-text">其他進位轉十進位</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E9%80%B2%E4%BD%8D%E8%BD%89%E5%85%B6%E4%BB%96%E9%80%B2%E4%BD%8D"><span class="nav-number">6.2.</span> <span class="nav-text">十進位轉其他進位</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B4%E6%95%B8%E9%83%A8%E5%88%86"><span class="nav-number">6.2.1.</span> <span class="nav-text">整數部分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%AE%E9%BB%9E%E6%95%B8%E9%83%A8%E5%88%86"><span class="nav-number">6.2.2.</span> <span class="nav-text">浮點數部分</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E9%80%B2%E4%BD%8D%E8%BD%89%E5%8D%81%E5%85%AD%E9%80%B2%E4%BD%8D"><span class="nav-number">6.3.</span> <span class="nav-text">二進位轉十六進位</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B4%E6%95%B8-4"><span class="nav-number">6.3.1.</span> <span class="nav-text">整數</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%AE%E9%BB%9E%E6%95%B8-4"><span class="nav-number">6.3.2.</span> <span class="nav-text">浮點數</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E9%80%B2%E4%BD%8D%E8%BD%89%E5%85%AB%E9%80%B2%E4%BD%8D"><span class="nav-number">6.4.</span> <span class="nav-text">二進位轉八進位</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B4%E6%95%B8-5"><span class="nav-number">6.4.1.</span> <span class="nav-text">整數</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%AE%E9%BB%9E%E6%95%B8-5"><span class="nav-number">6.4.2.</span> <span class="nav-text">浮點數</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E9%80%B2%E4%BD%8D%E8%BD%89%E5%8D%81%E5%85%AD%E9%80%B2%E4%BD%8D"><span class="nav-number">6.5.</span> <span class="nav-text">八進位轉十六進位</span></a></li></ol></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Gundambox"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Gundambox</p>
+  <div class="site-description" itemprop="description">什麼都碰，什麼都會，什麼都不會的鋼彈</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">40</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="http://gundambox.github.io/" title="GitHub → http:&#x2F;&#x2F;gundambox.github.io"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </section>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="http://gundambox.github.io/2015/10/08/%E8%A8%88%E7%AE%97%E6%A9%9F%E6%A6%82%E8%AB%96-%E6%95%B8%E5%AD%97%E7%B3%BB%E7%B5%B1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Gundambox">
+      <meta itemprop="description" content="什麼都碰，什麼都會，什麼都不會的鋼彈">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="鋼彈盪單槓">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          計算機概論-數字系統
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">發表於</span>
+
+      <time title="創建時間：2015-10-08 19:48:33" itemprop="dateCreated datePublished" datetime="2015-10-08T19:48:33+08:00">2015-10-08</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新於</span>
+        <time title="修改時間：2024-03-28 08:43:41" itemprop="dateModified" datetime="2024-03-28T08:43:41+08:00">2024-03-28</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分類於</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%A8%88%E7%AE%97%E6%A9%9F%E6%A6%82%E8%AB%96/" itemprop="url" rel="index"><span itemprop="name">計算機概論</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2015/10/08/%E8%A8%88%E7%AE%97%E6%A9%9F%E6%A6%82%E8%AB%96-%E6%95%B8%E5%AD%97%E7%B3%BB%E7%B5%B1/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/10/08/計算機概論-數字系統/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="文章字數">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">文章字數：</span>
+      <span>4.5k</span>
+    </span>
+    <span class="post-meta-item" title="所需閱讀時間">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">所需閱讀時間 &asymp;</span>
+      <span>4 分鐘</span>
+    </span>
+</div>
+
+            <div class="post-description">在寫C語言筆記之前，我覺得要先建立一些數字的概念，所以我就挑了大學時候的計算機概論，擷取一些我覺得重要的地方來講囉</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>在寫C語言筆記之前，我覺得要先建立一些數字的概念</p>
+<p>所以我就挑了大學時候的<a target="_blank" rel="noopener" href="http://www.books.com.tw/products/F011353305">計算機概論</a>，擷取一些我覺得重要的地方來講囉</p>
+<p>之後會按照順序講</p>
+<ul>
+<li>數字系統</li>
+<li>資料儲存</li>
+<li>邏輯運算</li>
+</ul>
+<p>這篇是講關於數字系統之間的轉換</p>
+<h1 id="定義"><a href="#定義" class="headerlink" title="定義"></a>定義</h1><p>這邊只講進位制(positional number system)</p>
+<p>一個數字表示為 $ \pm(S_{k-1} \cdots S_{0}.S_{-1} \cdots S_{-l})_{b} $</p>
+<p>表示值為 $ N = \pm(S_{k-1}*b^{k-1}+\cdots+S_0*b^0+S_{-1}*b^{-1}+\cdots+S_{-l}*b^{-l}) $</p>
+<p>其中<strong>S</strong>表示為數字的集合，<strong>b</strong>是基底(base or radix)</p>
+<h1 id="十進位系統"><a href="#十進位系統" class="headerlink" title="十進位系統"></a>十進位系統</h1><p>十進位系統是以10為基底，由0、1、2、3、4、5、6、7、8、9等十個數字組成，逢10就進位</p>
+<p>寫法為：$ (5487)_{10} $，但一般會省略基底表示為：$ 5487 $</p>
+<h2 id="整數"><a href="#整數" class="headerlink" title="整數"></a>整數</h2><p>十進位整數 $ N $ 可以表示為 $ \pm(S_{k-1}*10^{k-1}+\cdots+S_0*10^0) $</p>
+<p>例如 $ 5487 $ 可以表示為 $ 5*10^3+4*10^2+8*10^1+7*10^0 $</p>
+<h2 id="浮點數"><a href="#浮點數" class="headerlink" title="浮點數"></a>浮點數</h2><p>十進位浮點數 $ R $ </p>
+<p>可以表示為 $ \pm(\overbrace{S_{k-1}*10^{k-1}+\cdots+S_0*10^0}^{Integer\ part}+\overbrace{S_{-1}*10^{-1}+\cdots+S_{-l}*10^{-l}}^{fractional\ part}) $</p>
+<p>例如 $ 42689.2 $ 可以表示為 $ 4*10^4+2*10^3+6*10^2+8*10^1+9*10^0+2*10^{-1} $</p>
+<h1 id="二進位系統"><a href="#二進位系統" class="headerlink" title="二進位系統"></a>二進位系統</h1><p>二進位系統是以2為基底，由0、1所組成，逢2進位</p>
+<p>寫法為$ (101)_2 $</p>
+<h2 id="整數-1"><a href="#整數-1" class="headerlink" title="整數"></a>整數</h2><p>二進位整數 $ N $ 可以表示為 $ \pm(S_{k-1}*2^{k-1}+\cdots+S_0*2^0) $</p>
+<p>例如 $ (1011)_2 $ 可以表示為 $ 1*2^3+0*2^2+1*2^1+1*2^0 $</p>
+<h2 id="浮點數-1"><a href="#浮點數-1" class="headerlink" title="浮點數"></a>浮點數</h2><p>二進位浮點數 $ R $ 可以表示為 $ \pm(\overbrace{S_{k-1}*2^{k-1}+\cdots+S_0*2^0}^{Integer\ part}+\overbrace{S_{-1}*2^{-1}+\cdots+S_{-l}*2^{-l}}^{fractional\ part}) $</p>
+<p>例如 $ (101.01)_2 $ 可以表示為 $ 1*2^3+0*2^2+1*2^0+0*2^{-1}+1*2^{-2} $</p>
+<h1 id="八進位系統"><a href="#八進位系統" class="headerlink" title="八進位系統"></a>八進位系統</h1><p>八進位系統是以8為基底，由0、1、2、3、4、5、6、7、所組成，逢8進位</p>
+<p>寫法為$ (755)_8 $，也可以寫成$ 0755 $</p>
+<h2 id="整數-2"><a href="#整數-2" class="headerlink" title="整數"></a>整數</h2><p>八進位整數 $ N $ 可以表示為 $ \pm(S_{k-1}*8^{k-1}+\cdots+S_0*8^0) $</p>
+<p>例如 $ (1234)_8 $ 可以表示為 $ 1*8^3+2*8^2+3*8^1+4*8^0 $</p>
+<h2 id="浮點數-2"><a href="#浮點數-2" class="headerlink" title="浮點數"></a>浮點數</h2><p>八進位浮點數 $ R $ 可以表示為 $ \pm(\overbrace{S_{k-1}*8^{k-1}+\cdots+S_0*8^0}^{Integer\ part}+\overbrace{S_{-1}*8^{-1}+\cdots+S_{-l}*8^{-l}}^{fractional\ part}) $</p>
+<p>例如 $ (765.67)_8 $ 可以表示為 $ 7*8^3+6*8^2+5*8^0+6*8^{-1}+7*8^{-2} $</p>
+<h1 id="十六進位系統"><a href="#十六進位系統" class="headerlink" title="十六進位系統"></a>十六進位系統</h1><p>十六進位系統是以16為基底</p>
+<p>由0、1、2、3、4、5、6、7、8、9、A(10)、B(11)、C(12)、D(13)、E(14)、F(15)所組成，逢16進位</p>
+<p>寫法為$ (FF)_{16} $，也可以寫成$ 0xFF $</p>
+<h2 id="整數-3"><a href="#整數-3" class="headerlink" title="整數"></a>整數</h2><p>十六進位整數 $ N $ 可以表示為 $ \pm(S_{k-1}*16^{k-1}+\cdots+S_0*16^0) $</p>
+<p>例如 $ (FE98)_{16} $ 可以表示為 $ 15*16^3+14*16^2+9*16^1+8*16^0 $</p>
+<h2 id="浮點數-3"><a href="#浮點數-3" class="headerlink" title="浮點數"></a>浮點數</h2><p>十六進位浮點數 $ R $ 可以表示為 </p>
+<p>$ \pm(\overbrace{S_{k-1}*16^{k-1}+\cdots+S_0*16^0}^{Integer\ part}+\overbrace{S_{-1}*16^{-1}+\cdots+S_{-l}*16^{-l}}^{fractional\ part}) $</p>
+<p>例如 $ (ABC.DEF)_{16} $ 可以表示為 </p>
+<p>$ 10*16^3+11*16^2+12*16^0+13*16^{-1}+14*16^{-2}+15*16{-3} $</p>
+<h1 id="進制轉換"><a href="#進制轉換" class="headerlink" title="進制轉換"></a>進制轉換</h1><h2 id="其他進位轉十進位"><a href="#其他進位轉十進位" class="headerlink" title="其他進位轉十進位"></a>其他進位轉十進位</h2><p>任何進位要轉成十進位很簡單，轉換方法為</p>
+<p>$ N = S_{k-1}*b^{k-1}+\cdots+S_0*b^0+S_{-1}*b^{-1}+\cdots+S_{-l}*b^{-l} $ </p>
+<p>例1<br>$$ \begin{split}<br>&amp;(110.11)_{2} \\<br>&amp;= 1*2^2+1*2^1+0*2^0+1*2^{-1}+1*2^{-2} \\<br>&amp;= 4+2+0+0.5+0.25 = 0.75<br>\end{split} $$</p>
+<p>例2<br>$$ \begin{split}<br>&amp;(1A.23)_{16} \\<br>&amp;= 1*16^1+10*16^0+2*16^{-1}+3*16^{-2} \\<br>&amp;= 16+10+0.125+0.012 = 26.137 \\<br>\end{split} $$</p>
+<h2 id="十進位轉其他進位"><a href="#十進位轉其他進位" class="headerlink" title="十進位轉其他進位"></a>十進位轉其他進位</h2><h3 id="整數部分"><a href="#整數部分" class="headerlink" title="整數部分"></a>整數部分</h3><ol>
+<li>轉二進位</li>
+</ol>
+<p>$$ \begin{split}<br>2|\underline{35}&amp; \rightarrow 餘數 1 \\<br>2|\underline{17}&amp; \rightarrow 餘數 1 \\<br>2|\underline{8}&amp; \rightarrow 餘數 0 \\<br>2|\underline{4}&amp; \rightarrow 餘數 0 \\<br>2|\underline{2}&amp; \rightarrow 餘數 0 \\<br>1&amp; \rightarrow 餘數 1<br>\end{split} $$</p>
+<p>然後由下到上取出餘數，也就是100011，就可以得到$ (35)_{10} = (100011)_{2} $了 </p>
+<ol start="2">
+<li>轉八進位<br>$$ \begin{split}<br>8|\underline{126}&amp; \rightarrow 餘數 6 $ \\<br>8|\underline{15}&amp; \rightarrow 餘數 7 $ \\<br>1&amp; \rightarrow 餘數 1<br>\end{split} $$</li>
+</ol>
+<p>然後由下到上取出餘數，也就是176，就可以得到$ (126)_{10} = (176)_{8} $了 </p>
+<ol start="3">
+<li>轉十六進位<br>$$ \begin{split}<br>16|\underline{126}&amp; \rightarrow 餘數 E(14) \\<br>16|\underline{7}&amp; \rightarrow 餘數 7 \\<br>0&amp;<br>\end{split} $$</li>
+</ol>
+<p>然後由下到上取出餘數，也就是E7，就可以得到$ (126)_{10} = (E7)_{16} $了 </p>
+<h3 id="浮點數部分"><a href="#浮點數部分" class="headerlink" title="浮點數部分"></a>浮點數部分</h3><ol>
+<li>轉二進位<br>$$ \begin{split}<br>&amp;0.625 \\<br>*&amp;\underline{\ \ \ \ \ \ \ 2} \\<br>&amp;1.250 \rightarrow 取出1 \\<br>&amp;0.250 \\<br>*&amp;\underline{\ \ \ \ \ \ \ 2} \\<br>&amp;0.500 \rightarrow 取出0 \\<br>*&amp;\underline{\ \ \ \ \ \ \ 2} \\<br>&amp;1.000 \rightarrow 取出1<br>\end{split} $$</li>
+</ol>
+<p>然後由上到下取出數字，也就是101，就可以得到$ (0.625)_{10} = (0.101)_2 $了</p>
+<ol start="2">
+<li>轉八進位<br>$$ \begin{split}<br>&amp;0.171875 \\<br>*&amp;\underline{\ \ \ \ \ \ \ \ \ \ \ \ \ 8} \\<br>&amp;1.375000 \rightarrow 取出1 \\<br>&amp;0.375000 \\<br>*&amp;\underline{\ \ \ \ \ \ \ \ \ \ \ \ \ 8} \\<br>&amp;3.000000 \rightarrow 取出3 \\<br>\end{split} $$</li>
+</ol>
+<p>然後由上到下取出數字，也就是13，就可以得到$ (0.171875)_{10} = (0.13)_8 $了</p>
+<ol start="3">
+<li>轉十六進位<br>$$ \begin{split}<br>&amp;\ \ 0.89453125 \\<br>*&amp;\underline{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 16} \\<br>&amp;14.31250000 \rightarrow 取出E(14) \\<br>&amp;0.312500000 \\<br>*&amp;\underline{\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 16} \\<br>&amp;5.000000000 \rightarrow 取出5 \\<br>\end{split} $$</li>
+</ol>
+<p>然後由上到下取出數字，也就是E5，就可以得到$ (0.89453125)_{10} = (0.E5)_16 $了</p>
+<p><strong>小數從十進位轉到其他進位有可能會產生無限循環的小數，例如</strong> $ (0.1)_{10} = (0.1\overline{99})_{16} $</p>
+<h2 id="二進位轉十六進位"><a href="#二進位轉十六進位" class="headerlink" title="二進位轉十六進位"></a>二進位轉十六進位</h2><h3 id="整數-4"><a href="#整數-4" class="headerlink" title="整數"></a>整數</h3><p>由右往左，每四個位元轉成十六進位，如果位數不是四的倍數，則在數字前面補零</p>
+<p>例如$ (1010101010)_2 $：$ (\overbrace{0010}^{2}\overbrace{1010}^{A}\overbrace{1010}^{A})_2 $</p>
+<p>反過來就是將每位數字從十六進位轉為二進位，然後將結果連接起來</p>
+<p>例如$ (12)_{16} $：$ (\overbrace{1}^{0001}\overbrace{2}^{0010})_{16} $</p>
+<h3 id="浮點數-4"><a href="#浮點數-4" class="headerlink" title="浮點數"></a>浮點數</h3><p>由左往右，每四個位元轉成十六進位，如果位數不是四的倍數，則在數字後面補零</p>
+<p>例如$ (0.01111)_2 $：$ (0.\overbrace{0111}^{7}\overbrace{1000}^{8})_2 $</p>
+<p>反過來就是將每位數字從十六進位轉為二進位，然後將結果連接起來</p>
+<p>例如$ (0.5A)_{16} $：$ (\overbrace{5}^{0101}\overbrace{A}^{1010})_{16} $</p>
+<h2 id="二進位轉八進位"><a href="#二進位轉八進位" class="headerlink" title="二進位轉八進位"></a>二進位轉八進位</h2><h3 id="整數-5"><a href="#整數-5" class="headerlink" title="整數"></a>整數</h3><p>由右往左，每三個位元轉成八進位，如果位數不是三的倍數，則在數字前面補零</p>
+<p>例如$ (1010101)_2 $：$ (\overbrace{001}^{1}\overbrace{010}^{2}\overbrace{101}^{5})_8 $</p>
+<p>反過來就是將每位數字從八進位轉為二進位，然後將結果連接起來</p>
+<p>例如$ (34)_{8} $：$ (\overbrace{3}^{011}\overbrace{4}^{100})_{8} $</p>
+<h3 id="浮點數-5"><a href="#浮點數-5" class="headerlink" title="浮點數"></a>浮點數</h3><p>由左往右，每三個位元轉成八進位，如果位數不是三的倍數，則在數字後面補零</p>
+<p>例如$ (0.0111)_2 $：$ (0.\overbrace{011}^{3}\overbrace{100}^{4})_2 $</p>
+<p>反過來就是將每位數字從十六進位轉為二進位，然後將結果連接起來</p>
+<p>例如$ (0.57)_{8} $：$ (\overbrace{5}^{101}\overbrace{7}^{111})_{8} $</p>
+<h2 id="八進位轉十六進位"><a href="#八進位轉十六進位" class="headerlink" title="八進位轉十六進位"></a>八進位轉十六進位</h2><p>其實就把八進位轉成二進位再轉成十六進位而已XD</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+  <div class="followme">
+    <span>歡迎關注我的其它發布渠道</span>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+          <div class="post-tags">
+              <a href="/tags/%E8%A8%88%E7%AE%97%E6%A9%9F%E6%A6%82%E8%AB%96/" rel="tag"># 計算機概論</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2015/10/07/%E5%AE%89%E8%A3%9D%E6%95%B8%E5%AD%B8%E5%85%AC%E5%BC%8F%E6%8F%92%E4%BB%B6/" rel="prev" title="安裝數學公式插件">
+                  <i class="fa fa-chevron-left"></i> 安裝數學公式插件
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2015/10/13/%E8%A8%88%E7%AE%97%E6%A9%9F%E6%A6%82%E8%AB%96-%E8%B3%87%E6%96%99%E5%84%B2%E5%AD%98/" rel="next" title="計算機概論-資料儲存">
+                  計算機概論-資料儲存 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+      
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gundambox</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="總字數">106k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="所需總閱讀時間">1:36</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 強力驅動
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/@next-theme/pjax@0.4.0/pjax.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '.page-configurations',
+    '.main-inner',
+    '.post-toc-wrap',
+    '.languages',
+    '.pjax'
+  ],
+  analytics: false,
+  cacheBust: false,
+  scrollRestoration: false,
+  scrollTo: !CONFIG.bookmark.enable
+});
+
+document.addEventListener('pjax:success', () => {
+  pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  const hasTOC = document.querySelector('.post-toc');
+  document.querySelector('.sidebar-inner').classList.toggle('sidebar-nav-active', hasTOC);
+  document.querySelector(hasTOC ? '.sidebar-nav-toc' : '.sidebar-nav-overview').click();
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+    <div class="pjax">
+  
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://gundambox.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://gundambox.github.io/2015/10/08/%E8%A8%88%E7%AE%97%E6%A9%9F%E6%A6%82%E8%AB%96-%E6%95%B8%E5%AD%97%E7%B3%BB%E7%B5%B1/";
+    this.page.identifier = "2015/10/08/計算機概論-數字系統/";
+    this.page.title = "計算機概論-數字系統";
+    };
+  NexT.utils.loadComments('#disqus_thread', () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://gundambox.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+    </div>
+</body>
+</html>

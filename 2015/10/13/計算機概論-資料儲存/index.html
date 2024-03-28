@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"gundambox.github.io","root":"/","scheme":"Gemini","version":"8.0.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"width":300,"onmobile":false},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"prism":false,"i18n":{"placeholder":"搜尋...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+
+  <meta name="description" content="講完了數字系統，這一篇是講關於資料儲存，我挑了數字來講，其他的我覺得書本看過去就好。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="計算機概論-資料儲存">
+<meta property="og:url" content="http://gundambox.github.io/2015/10/13/%E8%A8%88%E7%AE%97%E6%A9%9F%E6%A6%82%E8%AB%96-%E8%B3%87%E6%96%99%E5%84%B2%E5%AD%98/index.html">
+<meta property="og:site_name" content="鋼彈盪單槓">
+<meta property="og:description" content="講完了數字系統，這一篇是講關於資料儲存，我挑了數字來講，其他的我覺得書本看過去就好。">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2015-10-13T10:01:33.000Z">
+<meta property="article:modified_time" content="2024-03-28T00:43:41.556Z">
+<meta property="article:author" content="Gundambox">
+<meta property="article:tag" content="計算機概論">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://gundambox.github.io/2015/10/13/%E8%A8%88%E7%AE%97%E6%A9%9F%E6%A6%82%E8%AB%96-%E8%B3%87%E6%96%99%E5%84%B2%E5%AD%98/">
+
+
+<script data-pjax class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-TW'
+  };
+</script>
+
+  <title>計算機概論-資料儲存 | 鋼彈盪單槓</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="鋼彈盪單槓" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">鋼彈盪單槓</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">鋼彈的 coding 筆記</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>關於</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>標籤</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分類</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>歸檔</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜尋
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜尋..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9C%A8%E9%9B%BB%E8%85%A6%E8%A3%A1%E9%9D%A2%E7%9A%84%E8%B3%87%E6%96%99"><span class="nav-number">1.</span> <span class="nav-text">在電腦裡面的資料</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%84%B2%E5%AD%98%E6%95%B8%E5%AD%97"><span class="nav-number">2.</span> <span class="nav-text">儲存數字</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B4%E6%95%B8"><span class="nav-number">2.1.</span> <span class="nav-text">整數</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%84%A1%E8%99%9F%E6%95%B4%E6%95%B8"><span class="nav-number">2.1.1.</span> <span class="nav-text">無號整數</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%89%E8%99%9F%E6%95%B4%E6%95%B8-sign-and-magnitude"><span class="nav-number">2.1.2.</span> <span class="nav-text">有號整數(sign-and-magnitude)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E8%A3%9C%E6%95%B8"><span class="nav-number">2.1.3.</span> <span class="nav-text">二補數</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%AE%E9%BB%9E%E6%95%B8"><span class="nav-number">2.2.</span> <span class="nav-text">浮點數</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A3%E8%A6%8F%E5%8C%96%E8%88%87IEEE%E6%A8%99%E6%BA%96"><span class="nav-number">2.2.1.</span> <span class="nav-text">正規化與IEEE標準</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#overflow-and-underflow"><span class="nav-number">2.2.2.</span> <span class="nav-text">overflow and underflow</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%88%AA%E6%96%B7%E8%AA%A4%E5%B7%AE"><span class="nav-number">2.2.3.</span> <span class="nav-text">截斷誤差</span></a></li></ol></li></ol></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Gundambox"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Gundambox</p>
+  <div class="site-description" itemprop="description">什麼都碰，什麼都會，什麼都不會的鋼彈</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">40</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="http://gundambox.github.io/" title="GitHub → http:&#x2F;&#x2F;gundambox.github.io"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </section>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="http://gundambox.github.io/2015/10/13/%E8%A8%88%E7%AE%97%E6%A9%9F%E6%A6%82%E8%AB%96-%E8%B3%87%E6%96%99%E5%84%B2%E5%AD%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Gundambox">
+      <meta itemprop="description" content="什麼都碰，什麼都會，什麼都不會的鋼彈">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="鋼彈盪單槓">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          計算機概論-資料儲存
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">發表於</span>
+
+      <time title="創建時間：2015-10-13 18:01:33" itemprop="dateCreated datePublished" datetime="2015-10-13T18:01:33+08:00">2015-10-13</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新於</span>
+        <time title="修改時間：2024-03-28 08:43:41" itemprop="dateModified" datetime="2024-03-28T08:43:41+08:00">2024-03-28</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分類於</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%A8%88%E7%AE%97%E6%A9%9F%E6%A6%82%E8%AB%96/" itemprop="url" rel="index"><span itemprop="name">計算機概論</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2015/10/13/%E8%A8%88%E7%AE%97%E6%A9%9F%E6%A6%82%E8%AB%96-%E8%B3%87%E6%96%99%E5%84%B2%E5%AD%98/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/10/13/計算機概論-資料儲存/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="文章字數">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">文章字數：</span>
+      <span>2.5k</span>
+    </span>
+    <span class="post-meta-item" title="所需閱讀時間">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">所需閱讀時間 &asymp;</span>
+      <span>2 分鐘</span>
+    </span>
+</div>
+
+            <div class="post-description">講完了數字系統，這一篇是講關於資料儲存，我挑了數字來講，其他的我覺得書本看過去就好。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>講完了數字系統，這一篇是講關於資料儲存，我挑了數字來講，其他的我覺得書本看過去就好。</p>
+<h1 id="在電腦裡面的資料"><a href="#在電腦裡面的資料" class="headerlink" title="在電腦裡面的資料"></a>在電腦裡面的資料</h1><p>位元(bit)是電腦儲存資料的最小單位，數值為0或1</p>
+<p>每八個位元為一個位元組(byte)</p>
+<h1 id="儲存數字"><a href="#儲存數字" class="headerlink" title="儲存數字"></a>儲存數字</h1><h2 id="整數"><a href="#整數" class="headerlink" title="整數"></a>整數</h2><h3 id="無號整數"><a href="#無號整數" class="headerlink" title="無號整數"></a>無號整數</h3><p>無號整數是大於等於零的整數，範圍是零到無限大</p>
+<p>但是電腦的儲存空間有限，所以數字會有表達範圍</p>
+<p>假如電腦能儲存的空間有n位元，那就表示電腦能表達的最大數字為 $ 2^n-1 $</p>
+<p>那麼在電腦中是如何儲存n位元的無號整數的呢</p>
+<ul>
+<li>將數字轉為二進位</li>
+<li>如果不滿n位元，則在前面補零</li>
+</ul>
+<p>例如：將7儲存為8位元的無號整數</p>
+<ul>
+<li>轉為二進位為 $ (111)_2 $</li>
+<li>在前面補零到八個位元為止 $ (00000111)_2 $</li>
+</ul>
+<p>如果將兩個整數相加但相加結果超出n位元的表達範圍(邊界)，稱之為<strong>overflow</strong></p>
+<p>例如在8位元下</p>
+<p>$ (11111111)_2+(00000001)_2 $ 應該等於 $ (100000000)_2 $</p>
+<p>但是空間只有8位元的情況下</p>
+<p>第九個位元會被捨去</p>
+<p>就會使結果變成 $ (00000000)_2 $</p>
+<h3 id="有號整數-sign-and-magnitude"><a href="#有號整數-sign-and-magnitude" class="headerlink" title="有號整數(sign-and-magnitude)"></a>有號整數(sign-and-magnitude)</h3><p>那怎麼表達正負號呢</p>
+<p>於是就定義了最前面(最左邊)的位元來表示正負號</p>
+<p>0表示正號，1表示負號</p>
+<p>雖然在n位元下，能表達的數字範圍少了一半，但總算能表達正負號了</p>
+<p>例1：28存為8位元有號整數時</p>
+<ul>
+<li>先轉為二進位 $ (11100)_2 $</li>
+<li>補零補到七位元 $ (0011100)_2 $</li>
+<li>視正負號補上第八位元 $ (00011100)_2 $</li>
+</ul>
+<p>例2：-28存為8位元有號整數時</p>
+<ul>
+<li>先轉為二進位 $ (11100)_2 $</li>
+<li>補零補到七位元 $ (0011100)_2 $</li>
+<li>視正負號補上第八位元 $ (10011100)_2 $</li>
+</ul>
+<p>在這邊overflow仍然是存在的</p>
+<p><strong>注意</strong>：這種做法會有正零跟負零喔出現喔</p>
+<h3 id="二補數"><a href="#二補數" class="headerlink" title="二補數"></a>二補數</h3><p>雖然解決了表達正負號的問題，但電路上的實作卻遇到一個問題</p>
+<p>加法跟減法需要分開實作，於是就有人想了，能不能兼具實作方便又能表達正負數</p>
+<p>於是就有了二補數，做法為：</p>
+<ul>
+<li>將數字做一補數</li>
+<li>將數字加1</li>
+</ul>
+<p>何謂一補數呢？只要將原數字的二進位反轉就是一補數了</p>
+<p>例如8位元下， $ (00000101)_2 $ 的一補數是 $ (11111010)_2 $</p>
+<p>而 $ (5)_{10} = (00000101)_2 $ 的二補數就是 $ (11111010)_2 $ 再加1，變成 $ (-5)_{10} = (11111011)_2 $</p>
+<p>到底為什麼二補數可以讓減法用加法解決呢</p>
+<p>例如 $ 1-1=0 $，我們可以將減法當作加上一個負值，變成 $ 1+(-1)=0 $</p>
+<p>來檢驗一下這條算式是不是對的</p>
+<p>1為 $ (00000001)_2 $，-1為 $ (11111111)_2 $</p>
+<p>兩個相加等於 $ (100000000)_2 $，但是第九個位元會被捨去</p>
+<p>所以就變成了 $ (00000000)_2 $</p>
+<p>又例如 $ 5-4=5+(-4)=(00000101)_2+(11111100)_2=(100000001)_2 $</p>
+<p>去掉第九位元之後就變成 $ (00000001)_2=(1)_{10} $</p>
+<h2 id="浮點數"><a href="#浮點數" class="headerlink" title="浮點數"></a>浮點數</h2><h3 id="正規化與IEEE標準"><a href="#正規化與IEEE標準" class="headerlink" title="正規化與IEEE標準"></a>正規化與IEEE標準</h3><p>在儲存浮點數前，要先將二進位數字化為適當的科學記號，也就是正規化，然後按照IEEE訂的標準儲存</p>
+<p>正規化就是將數字轉為 $ 1.xxxxx*2^{exp} $ 的形式</p>
+<p>例如 $ (0.000000101001)_2 $ 要化為 $ 1.01001*2^7 $</p>
+<p>然後我們可以得到三個部分</p>
+<ul>
+<li>Sign (正負號)</li>
+<li>Exponent (指數)</li>
+<li>Mantissa (尾數)</li>
+</ul>
+<p>舉 $ 1.01001*2^7 $ 為例，Sign就是+，Exponent為7，Mantissa為01001</p>
+<p>取出這三個部分後，就可以按照IEEE標準儲存浮點數了</p>
+<p>IEEE規定32位元浮點數的Sign為1位元，Exponent為8位元，Mantissa為23位元</p>
+<p>64位元浮點數的Sign為1位元，Exponent為11位元，Mantissa為52位元</p>
+<p>其中Exponent不是用二補數儲存，而是採用無號整數</p>
+<p>負數均位移 $ 2^{Exponent-1}-1 $，也就是加 $ 2^{Exponent-1}-1 $</p>
+<p>例如1位移之後變128，-1位移之後變126</p>
+<p>儲存浮點數的步驟：</p>
+<ul>
+<li>確認正負號 (0 or 1)</li>
+<li>將數字轉成二進位</li>
+<li>正規化</li>
+<li>找出Exponent與Mantissa</li>
+<li>將結果連接起來</li>
+</ul>
+<p>例如-0.0234375：</p>
+<ul>
+<li>確認正負號：1</li>
+<li>將數字轉為二進位：$ (0.0000011)_2 $</li>
+<li>正規化：$ (1.1)_2*2^{-6} $ </li>
+<li>找出Exponent與Mantissa：$ E=-6+127=121=(01111001)_2 $ 且 $ M=(1)_2 $</li>
+<li>將結果連接起來：$ \overbrace{1}^{Sign}\overbrace{01111001}^{Exponent}\overbrace{10000000000000000000000}^{Mantissa} $</li>
+</ul>
+<p>有一個特別情況是數字為0的時候</p>
+<p>不是00111111100000000000000000000000</p>
+<p>也不是10111111100000000000000000000000喔XD</p>
+<p>IEEE有特別規定所有位元為0的時候表示數字為0</p>
+<h3 id="overflow-and-underflow"><a href="#overflow-and-underflow" class="headerlink" title="overflow and underflow"></a>overflow and underflow</h3><p>overflow之前就談過了</p>
+<p>如果你試圖存取超過 $ \pm(1.11111111111111111111111)_2*2^{128} $ 的數字</p>
+<p>記憶體就會炸裂給你看www</p>
+<p>underflow是指試圖存取比範圍更小的數字</p>
+<p>也就是 $ \pm(0.00000000000000000000001)_2*2^{-127} $</p>
+<h3 id="截斷誤差"><a href="#截斷誤差" class="headerlink" title="截斷誤差"></a>截斷誤差</h3><p>如果你試圖將一個極大一個極小的數字相加就會產生截斷誤差</p>
+<p>例如 $ (11111111111111111111.11)_2+(0.00000000000000000000001)_2 $</p>
+<p>結果應該是 $ (11111111111111111111.11000000000000000000001)_2 $</p>
+<p>正規化後變成 $ (1.111111111111111111111000000000000000000001)_2*2^{19} $</p>
+<p>但是在儲存的時候，尾數只有23位元</p>
+<p>也就是11111111111111111111100會被儲存，最後的1卻不見了</p>
+<p>所以在做浮點數運算的時候要非常小心</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+  <div class="followme">
+    <span>歡迎關注我的其它發布渠道</span>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+          <div class="post-tags">
+              <a href="/tags/%E8%A8%88%E7%AE%97%E6%A9%9F%E6%A6%82%E8%AB%96/" rel="tag"># 計算機概論</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2015/10/08/%E8%A8%88%E7%AE%97%E6%A9%9F%E6%A6%82%E8%AB%96-%E6%95%B8%E5%AD%97%E7%B3%BB%E7%B5%B1/" rel="prev" title="計算機概論-數字系統">
+                  <i class="fa fa-chevron-left"></i> 計算機概論-數字系統
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2015/10/15/%E8%A8%88%E7%AE%97%E6%A9%9F%E6%A6%82%E8%AB%96-%E9%82%8F%E8%BC%AF%E9%81%8B%E7%AE%97/" rel="next" title="計算機概論-邏輯運算">
+                  計算機概論-邏輯運算 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+      
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gundambox</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="總字數">106k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="所需總閱讀時間">1:36</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 強力驅動
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/@next-theme/pjax@0.4.0/pjax.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '.page-configurations',
+    '.main-inner',
+    '.post-toc-wrap',
+    '.languages',
+    '.pjax'
+  ],
+  analytics: false,
+  cacheBust: false,
+  scrollRestoration: false,
+  scrollTo: !CONFIG.bookmark.enable
+});
+
+document.addEventListener('pjax:success', () => {
+  pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  const hasTOC = document.querySelector('.post-toc');
+  document.querySelector('.sidebar-inner').classList.toggle('sidebar-nav-active', hasTOC);
+  document.querySelector(hasTOC ? '.sidebar-nav-toc' : '.sidebar-nav-overview').click();
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+    <div class="pjax">
+  
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://gundambox.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://gundambox.github.io/2015/10/13/%E8%A8%88%E7%AE%97%E6%A9%9F%E6%A6%82%E8%AB%96-%E8%B3%87%E6%96%99%E5%84%B2%E5%AD%98/";
+    this.page.identifier = "2015/10/13/計算機概論-資料儲存/";
+    this.page.title = "計算機概論-資料儲存";
+    };
+  NexT.utils.loadComments('#disqus_thread', () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://gundambox.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+    </div>
+</body>
+</html>

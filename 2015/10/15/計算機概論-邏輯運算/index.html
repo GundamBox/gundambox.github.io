@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"gundambox.github.io","root":"/","scheme":"Gemini","version":"8.0.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"width":300,"onmobile":false},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"prism":false,"i18n":{"placeholder":"搜尋...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+
+  <meta name="description" content="這篇是講關於邏輯運算的一些觀念">
+<meta property="og:type" content="article">
+<meta property="og:title" content="計算機概論-邏輯運算">
+<meta property="og:url" content="http://gundambox.github.io/2015/10/15/%E8%A8%88%E7%AE%97%E6%A9%9F%E6%A6%82%E8%AB%96-%E9%82%8F%E8%BC%AF%E9%81%8B%E7%AE%97/index.html">
+<meta property="og:site_name" content="鋼彈盪單槓">
+<meta property="og:description" content="這篇是講關於邏輯運算的一些觀念">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2015-10-15T11:32:48.000Z">
+<meta property="article:modified_time" content="2024-03-28T00:43:41.556Z">
+<meta property="article:author" content="Gundambox">
+<meta property="article:tag" content="計算機概論">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://gundambox.github.io/2015/10/15/%E8%A8%88%E7%AE%97%E6%A9%9F%E6%A6%82%E8%AB%96-%E9%82%8F%E8%BC%AF%E9%81%8B%E7%AE%97/">
+
+
+<script data-pjax class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-TW'
+  };
+</script>
+
+  <title>計算機概論-邏輯運算 | 鋼彈盪單槓</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="鋼彈盪單槓" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">鋼彈盪單槓</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">鋼彈的 coding 筆記</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>關於</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>標籤</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分類</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>歸檔</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜尋
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜尋..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%82%8F%E8%BC%AF%E9%81%8B%E7%AE%97"><span class="nav-number">1.</span> <span class="nav-text">邏輯運算</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#NOT"><span class="nav-number">1.1.</span> <span class="nav-text">NOT</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AND"><span class="nav-number">1.2.</span> <span class="nav-text">AND</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#OR"><span class="nav-number">1.3.</span> <span class="nav-text">OR</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#XOR"><span class="nav-number">1.4.</span> <span class="nav-text">XOR</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%8D%E7%A7%BB%E9%81%8B%E7%AE%97"><span class="nav-number">2.</span> <span class="nav-text">位移運算</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%82%8F%E8%BC%AF%E4%BD%8D%E7%A7%BB"><span class="nav-number">2.1.</span> <span class="nav-text">邏輯位移</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BE%AA%E7%92%B0%E4%BD%8D%E7%A7%BB"><span class="nav-number">2.2.</span> <span class="nav-text">循環位移</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%97%E8%A1%93%E4%BD%8D%E7%A7%BB"><span class="nav-number">2.3.</span> <span class="nav-text">算術位移</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%97%E8%A1%93%E9%81%8B%E7%AE%97"><span class="nav-number">3.</span> <span class="nav-text">算術運算</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B4%E6%95%B8-%E4%BA%8C%E8%A3%9C%E6%95%B8-%E7%9A%84%E5%8A%A0%E6%B8%9B%E6%B3%95"><span class="nav-number">3.1.</span> <span class="nav-text">整數(二補數)的加減法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B4%E6%95%B8-sign-and-magnitude-%E7%9A%84%E5%8A%A0%E6%B8%9B%E6%B3%95"><span class="nav-number">3.2.</span> <span class="nav-text">整數(sign-and-magnitude)的加減法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%AE%E9%BB%9E%E6%95%B8%E7%9A%84%E5%8A%A0%E6%B8%9B%E6%B3%95"><span class="nav-number">3.3.</span> <span class="nav-text">浮點數的加減法</span></a></li></ol></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Gundambox"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Gundambox</p>
+  <div class="site-description" itemprop="description">什麼都碰，什麼都會，什麼都不會的鋼彈</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">40</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="http://gundambox.github.io/" title="GitHub → http:&#x2F;&#x2F;gundambox.github.io"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </section>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="http://gundambox.github.io/2015/10/15/%E8%A8%88%E7%AE%97%E6%A9%9F%E6%A6%82%E8%AB%96-%E9%82%8F%E8%BC%AF%E9%81%8B%E7%AE%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Gundambox">
+      <meta itemprop="description" content="什麼都碰，什麼都會，什麼都不會的鋼彈">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="鋼彈盪單槓">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          計算機概論-邏輯運算
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">發表於</span>
+
+      <time title="創建時間：2015-10-15 19:32:48" itemprop="dateCreated datePublished" datetime="2015-10-15T19:32:48+08:00">2015-10-15</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新於</span>
+        <time title="修改時間：2024-03-28 08:43:41" itemprop="dateModified" datetime="2024-03-28T08:43:41+08:00">2024-03-28</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分類於</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%A8%88%E7%AE%97%E6%A9%9F%E6%A6%82%E8%AB%96/" itemprop="url" rel="index"><span itemprop="name">計算機概論</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2015/10/15/%E8%A8%88%E7%AE%97%E6%A9%9F%E6%A6%82%E8%AB%96-%E9%82%8F%E8%BC%AF%E9%81%8B%E7%AE%97/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/10/15/計算機概論-邏輯運算/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="文章字數">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">文章字數：</span>
+      <span>4.4k</span>
+    </span>
+    <span class="post-meta-item" title="所需閱讀時間">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">所需閱讀時間 &asymp;</span>
+      <span>4 分鐘</span>
+    </span>
+</div>
+
+            <div class="post-description">這篇是講關於邏輯運算的一些觀念</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>這篇是講關於邏輯運算的一些觀念</p>
+<h1 id="邏輯運算"><a href="#邏輯運算" class="headerlink" title="邏輯運算"></a>邏輯運算</h1><h2 id="NOT"><a href="#NOT" class="headerlink" title="NOT"></a>NOT</h2><p>NOT運算子是一元運算子，只有一個輸入，輸出與輸入相反的值</p>
+<p>輸入0就會輸出1，輸入1就會輸出0</p>
+<p>truth table：</p>
+<table>
+<thead>
+<tr>
+<th>x</th>
+<th>NOT x</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody></table>
+<p>擴展到n bits之後就可以做一補數運算了www</p>
+<p>例如：NOT 10011000 = 01100111</p>
+<h2 id="AND"><a href="#AND" class="headerlink" title="AND"></a>AND</h2><p>AND運算子是二元運算子，有兩個輸入</p>
+<p>只有兩個輸入同時為1的時候才會輸出1，其他輸出0</p>
+<p>truth table：</p>
+<table>
+<thead>
+<tr>
+<th>x</th>
+<th>y</th>
+<th>x AND y</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+</tbody></table>
+<p>擴展到n bits之後可以用來做unset(強制設為0)</p>
+<p>例如10100110 AND 00000111 = 00000110</p>
+<h2 id="OR"><a href="#OR" class="headerlink" title="OR"></a>OR</h2><p>OR運算子是二元運算子，有兩個輸入</p>
+<p>只要其中一個輸入為1就會輸出1，其他輸出0</p>
+<p>truth table：</p>
+<table>
+<thead>
+<tr>
+<th>x</th>
+<th>y</th>
+<th>x OR y</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+</tbody></table>
+<p>擴展到n bits之後可以設定特定位元為1</p>
+<p>例如10100110 OR 11111000 = 11111110</p>
+<h2 id="XOR"><a href="#XOR" class="headerlink" title="XOR"></a>XOR</h2><p>XOR運算子是二元運算子(念作exclusive-or)，有兩個輸入</p>
+<p>兩個輸入不一樣的時候才會輸出1，其他輸出0</p>
+<p>XOR其實是由前三個運算組合起來的</p>
+<p>$ x\ XOR\ y\leftrightarrow[x\ AND\ (NOT\ y)]\ OR\ [(NOT\ x)\ AND\ y] $</p>
+<p>truth table：</p>
+<table>
+<thead>
+<tr>
+<th>x</th>
+<th>y</th>
+<th>x XOR y</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody></table>
+<p>擴展到n bits之後可以用來反轉特定位元</p>
+<p>例如10100110 OR 11111000 = 01011110</p>
+<h1 id="位移運算"><a href="#位移運算" class="headerlink" title="位移運算"></a>位移運算</h1><h2 id="邏輯位移"><a href="#邏輯位移" class="headerlink" title="邏輯位移"></a>邏輯位移</h2><ul>
+<li>右移</li>
+</ul>
+<p>所有位元都往右移一位，捨棄最右邊的位元，最左邊的位元填上0</p>
+<p>例如10011000右移一位之後變成01001100</p>
+<ul>
+<li>左移</li>
+</ul>
+<p>所有位元都往左移一位，捨棄最左邊的位元，最右邊的位元填上0</p>
+<p>例如10011000左移一位之後變成00110000</p>
+<h2 id="循環位移"><a href="#循環位移" class="headerlink" title="循環位移"></a>循環位移</h2><ul>
+<li>右移</li>
+</ul>
+<p>所有位元都往右移一位，最右邊的位元補到最左邊的位元</p>
+<p>例如10011001右移一位之後變成11001100</p>
+<ul>
+<li>左移</li>
+</ul>
+<p>所有位元都往左移一位，捨棄最左邊的位元補到最右邊的位元</p>
+<p>例如10011001左移一位之後變成00110011</p>
+<h2 id="算術位移"><a href="#算術位移" class="headerlink" title="算術位移"></a>算術位移</h2><ul>
+<li>右移</li>
+</ul>
+<p>所有位元都往右移一位，捨棄最右邊的位元，最左邊的位元填上原本的位元(保持原本的正負號)</p>
+<p>例如10011000右移一位之後變成11001100</p>
+<ul>
+<li>左移</li>
+</ul>
+<p>所有位元都往左移一位，捨棄最左邊的位元，最右邊的位元填上0</p>
+<p>例如10011000左移一位之後變成00110000</p>
+<h1 id="算術運算"><a href="#算術運算" class="headerlink" title="算術運算"></a>算術運算</h1><h2 id="整數-二補數-的加減法"><a href="#整數-二補數-的加減法" class="headerlink" title="整數(二補數)的加減法"></a>整數(二補數)的加減法</h2><p>整數(二補數)運算的過程：</p>
+<p>$ A \pm B=? $</p>
+<ol>
+<li>判斷是加法或減法</li>
+<li>若為減法則做二補數</li>
+<li>相加</li>
+</ol>
+<p>例1：A=$ (00010001)_2 $,B=$ (00010110)_2 $</p>
+<p>A+B=?</p>
+<ol>
+<li>判斷是加法或減法：加法</li>
+<li>若為減法則做二補數：跳過</li>
+<li>相加<br>$$ \begin{split}<br>&amp;\ \ \ \ 1\ \ \ \ \ \ \ \ \ \ \ \ Carry(進位) \\<br>&amp;00010001\ A \\</li>
+</ol>
+<p>+&amp;\underline{00010110}\ B \\<br>&amp;00100111\ R(結果)<br>\end{split} $$</p>
+<p>我們得到 (+17) + (+22) = (+39)</p>
+<p>例2：A=$ (11011101)_2 $,B=$ (00010100)_2 $</p>
+<p>A-B=?</p>
+<ol>
+<li>判斷是加法或減法：減法</li>
+<li>若為減法則做二補數：$ (00010100)_2 $ 的二補數 $ (11101100)_2 $</li>
+<li>相加<br>$$ \begin{split}<br>1&amp;11111\ \ \ \ \ \ \ Carry(進位) \\<br>&amp;11011101\ A \\</li>
+</ol>
+<p>+&amp;\underline{00010100}\ (\overline{B}+1) \\<br>&amp;11001001\ R(結果)<br>\end{split} $$</p>
+<p>我們得到 (-35) - (+20) = (-55)</p>
+<h2 id="整數-sign-and-magnitude-的加減法"><a href="#整數-sign-and-magnitude-的加減法" class="headerlink" title="整數(sign-and-magnitude)的加減法"></a>整數(sign-and-magnitude)的加減法</h2><p>整數(sign-and-magnitude)運算的過程：</p>
+<p>$ A \pm B=? $</p>
+<ol>
+<li>判斷是加法或減法</li>
+<li>若為減法則將 $ B_{Sign} $ 做NOT運算</li>
+<li>指定S為 $ A_{Sign}\ XOR\ B_{Sign} $</li>
+<li>若S等於1跳到第5步驟，否則跳到第6步驟</li>
+<li><ol>
+<li>$ R_{Magnitude} \leftarrow A_{Magnitude}+(\overline{B_{Magnitude}}+1) $</li>
+<li>檢查是否overflow</li>
+<li>如果overflow，$ R_{Sign} \leftarrow A_{Sign} $，然後結束，如果沒有跳到下一步驟</li>
+<li>$ R_{Magnitude} \leftarrow (\overline{R_{Magnitude}}+1) $</li>
+<li>$ R_{Sign} \leftarrow B_{Sign} $</li>
+</ol>
+</li>
+<li><ol>
+<li>$ R_{Magnitude} \leftarrow A_{Magnitude}+B_{Magnitude} $</li>
+<li>檢查是否overflow</li>
+<li>如果overflow，回到overflow然後結束，如果沒有跳到下一步驟</li>
+<li>$ R_{Sign} \leftarrow A_{Sign} $</li>
+</ol>
+</li>
+</ol>
+<p>例1：A=$ (00010001)_2 $,B=$ (00010110)_2 $</p>
+<p>A+B=?</p>
+<ol>
+<li>判斷是加法或減法：加法</li>
+<li>若為減法則將 $ B_{Sign} $ 做NOT運算：跳過</li>
+<li>指定S為 $ A_{Sign}\ XOR\ B_{Sign} $：S=0</li>
+<li><ol>
+<li>$ R_{Magnitude} \leftarrow A_{Magnitude}+B_{Magnitude} $：$ R_{Magnitude}=0100111 $</li>
+<li>檢查是否overflow</li>
+<li>如果overflow，回到overflow然後結束，如果沒有跳到下一步驟</li>
+<li>$ R_{Sign} \leftarrow A_{Sign} $：$ R_{Sign}=0 $</li>
+</ol>
+</li>
+</ol>
+<p>這樣就得到結果 $ (+17)+(22)=(00100111)_2=(+39) $</p>
+<p>例2：A=$ (00010001)_2 $,B=$ (10010110)_2 $</p>
+<p>A+B=?</p>
+<ol>
+<li>判斷是加法或減法：加法</li>
+<li>若為減法則將 $ B_{Sign} $ 做NOT運算：跳過</li>
+<li>指定S為 $ A_{Sign}\ XOR\ B_{Sign} $：S=1</li>
+<li>$ R_{Magnitude} \leftarrow A_{Magnitude}+(\overline{B_{Magnitude}}+1) $：$$ \begin{split}<br>No\ overflow\ \ \ \ \ \ &amp;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Carry(進位) \\<br>A_{Sign}\ 0\ \ \ \ \ \ &amp;0010001\ A_{Magnitude} \\<br>B_{Sign}\ 1\ \ +&amp;\underline{1101010}\ (\overline{B_{Magnitude}}+1) \\<br>&amp;1111011\ R_{Magnitude} \\<br>R_{Sign}\ 1\ \ \ \ \ \ &amp;0000101\ R_{Magnitude}= (\overline{R_{Magnitude}}+1) \\<br>\end{split} $$</li>
+</ol>
+<p>這樣就得到結果 $ (+17)+(-22)=(10000101)_2=(-5) $</p>
+<p>例3：A=$ (11010001)_2 $,B=$ (10010110)_2 $</p>
+<p>A-B=?</p>
+<ol>
+<li>判斷是加法或減法：減法</li>
+<li>若為減法則將 $ B_{Sign} $ 做NOT運算</li>
+<li>指定S為 $ A_{Sign}\ XOR\ B_{Sign} $：S=1</li>
+<li><ol>
+<li>$ R_{Magnitude} \leftarrow A_{Magnitude}+(\overline{B_{Magnitude}}+1) $：$ R_{Magnitude}=(0111011)_2 $</li>
+<li>檢查是否overflow</li>
+<li>如果overflow，$ R_{Sign} \leftarrow A_{Sign} $，然後結束：$ R_{Sign}=1 $</li>
+</ol>
+</li>
+</ol>
+<p>這樣就得到結果 $ (-81)+(-22)=(10111011)_2=(-59) $</p>
+<h2 id="浮點數的加減法"><a href="#浮點數的加減法" class="headerlink" title="浮點數的加減法"></a>浮點數的加減法</h2><p>$ A \pm B=? $</p>
+<p>浮點數運算的過程：</p>
+<ol>
+<li>如果其中一個數字為0，運算結果就為另一個數字</li>
+<li>檢查是加法或減法</li>
+<li>如果是減法，把 $ B_{Sign} $ 做NOT運算</li>
+<li>將兩個數字去正規化(在尾數前面加個1 www)</li>
+<li>將指數較小的數字累乘，並向右位移</li>
+<li>將兩數相加(sign-and-magnitude)</li>
+<li>檢查有沒有overflow</li>
+<li>如果有overflow就將尾數右移，指數加一</li>
+<li>正規化</li>
+<li>如果需要捨去尾數則捨去</li>
+</ol>
+<p>例1：</p>
+<p>A=$ (0\ 10000001\ 01110000000000000000000)_2 $<br>B=$ (0\ 10000110\ 01000011110000000000000)_2 $</p>
+<p>A+B=?</p>
+<ol>
+<li>如果其中一個數字為0，運算結果就為另一個數字：跳過</li>
+<li>檢查是加法或減法：加法</li>
+<li>如果是減法，把 $ B_{Sign} $ 做NOT運算：跳過</li>
+<li>將兩個數字去正規化(在尾數前面加個1 www)：</li>
+</ol>
+<p>$ A_{Mantissa}=(101110000000000000000000)_2 $<br>$ B_{Mantissa}=(101000011110000000000000)_2 $</p>
+<ol start="5">
+<li>將指數較小的數字累乘，並向右位移</li>
+</ol>
+<p>A較小，指數加五，尾數右移五位</p>
+<p>A_{Mantissa}=(000001011100000000000000) $</p>
+<ol start="6">
+<li>將兩數相加(sign-and-magnitude)</li>
+</ol>
+<p>R_{Mantissa}=(101001111010000000000000)_2</p>
+<ol start="7">
+<li>檢查有沒有overflow</li>
+<li>如果有overflow就將尾數右移，指數加一：沒有</li>
+<li>正規化</li>
+</ol>
+<p>$ R=(0\ 10000110\ 101001111010000000000000)_2 $</p>
+<ol start="10">
+<li>如果需要捨去尾數則捨去：跳過</li>
+</ol>
+<p>這樣就得到結果$ R=(010000110101001111010000000000000)_2 $</p>
+<p>例2：</p>
+<p>A=$ (0\ 10000001\ 01110000000000000000000)_2 $<br>B=$ (1\ 10000001\ 11000001100000000000000)_2 $</p>
+<p>A-B=?</p>
+<ol>
+<li>如果其中一個數字為0，運算結果就為另一個數字：跳過</li>
+<li>檢查是加法或減法：減法</li>
+<li>如果是減法，把 $ B_{Sign} $ 做NOT運算</li>
+<li>將兩個數字去正規化(在尾數前面加個1 www)</li>
+</ol>
+<p>$ A_{Mantissa}=(101110000000000000000000)_2 $<br>$ B_{Mantissa}=(111000001100000000000000)_2 $</p>
+<ol start="5">
+<li>將指數較小的數字累乘，並向右位移：兩數指數一樣，跳過</li>
+<li>將兩數相加(sign-and-magnitude)：</li>
+</ol>
+<p>$ R_{Sign}=(1)_2 $<br>$ R_{Mantissa}=(1010100011000000000000000)_2 $</p>
+<ol start="7">
+<li>檢查有沒有overflow：有</li>
+<li>如果有overflow就將尾數右移，指數加一</li>
+</ol>
+<p>$ R_{Exponent}={10000010}_2 $<br>$ R_{Mantissa}=(0010100011000000000000000)_2 $</p>
+<ol start="9">
+<li>正規化</li>
+</ol>
+<p>$ R=(1\ 10000010\ 001010001100000000000000)_2 $</p>
+<ol start="10">
+<li>如果需要捨去尾數則捨去</li>
+</ol>
+<p>$ R=(1\ 10000010\ 00101000110000000000000)_2 $</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+  <div class="followme">
+    <span>歡迎關注我的其它發布渠道</span>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+          <div class="post-tags">
+              <a href="/tags/%E8%A8%88%E7%AE%97%E6%A9%9F%E6%A6%82%E8%AB%96/" rel="tag"># 計算機概論</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2015/10/13/%E8%A8%88%E7%AE%97%E6%A9%9F%E6%A6%82%E8%AB%96-%E8%B3%87%E6%96%99%E5%84%B2%E5%AD%98/" rel="prev" title="計算機概論-資料儲存">
+                  <i class="fa fa-chevron-left"></i> 計算機概論-資料儲存
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2015/10/17/C%E8%AA%9E%E8%A8%80-Hello-World/" rel="next" title="C語言-Hello World">
+                  C語言-Hello World <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+      
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gundambox</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="總字數">106k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="所需總閱讀時間">1:36</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 強力驅動
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/@next-theme/pjax@0.4.0/pjax.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '.page-configurations',
+    '.main-inner',
+    '.post-toc-wrap',
+    '.languages',
+    '.pjax'
+  ],
+  analytics: false,
+  cacheBust: false,
+  scrollRestoration: false,
+  scrollTo: !CONFIG.bookmark.enable
+});
+
+document.addEventListener('pjax:success', () => {
+  pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  const hasTOC = document.querySelector('.post-toc');
+  document.querySelector('.sidebar-inner').classList.toggle('sidebar-nav-active', hasTOC);
+  document.querySelector(hasTOC ? '.sidebar-nav-toc' : '.sidebar-nav-overview').click();
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+    <div class="pjax">
+  
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://gundambox.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://gundambox.github.io/2015/10/15/%E8%A8%88%E7%AE%97%E6%A9%9F%E6%A6%82%E8%AB%96-%E9%82%8F%E8%BC%AF%E9%81%8B%E7%AE%97/";
+    this.page.identifier = "2015/10/15/計算機概論-邏輯運算/";
+    this.page.title = "計算機概論-邏輯運算";
+    };
+  NexT.utils.loadComments('#disqus_thread', () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://gundambox.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+    </div>
+</body>
+</html>

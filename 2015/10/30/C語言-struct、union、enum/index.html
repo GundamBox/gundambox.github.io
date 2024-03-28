@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.0/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"gundambox.github.io","root":"/","scheme":"Gemini","version":"8.0.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"width":300,"onmobile":false},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"prism":false,"i18n":{"placeholder":"搜尋...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+
+  <meta name="description" content="這篇是講關於C語言的自訂型態">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C語言-struct、union、enum">
+<meta property="og:url" content="http://gundambox.github.io/2015/10/30/C%E8%AA%9E%E8%A8%80-struct%E3%80%81union%E3%80%81enum/index.html">
+<meta property="og:site_name" content="鋼彈盪單槓">
+<meta property="og:description" content="這篇是講關於C語言的自訂型態">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2015-10-30T01:10:53.000Z">
+<meta property="article:modified_time" content="2024-03-28T00:43:41.560Z">
+<meta property="article:author" content="Gundambox">
+<meta property="article:tag" content="C語言">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://gundambox.github.io/2015/10/30/C%E8%AA%9E%E8%A8%80-struct%E3%80%81union%E3%80%81enum/">
+
+
+<script data-pjax class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-TW'
+  };
+</script>
+
+  <title>C語言-struct、union、enum | 鋼彈盪單槓</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><link rel="alternate" href="/atom.xml" title="鋼彈盪單槓" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切換導航欄">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">鋼彈盪單槓</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">鋼彈的 coding 筆記</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首頁</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>關於</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>標籤</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分類</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>歸檔</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜尋
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜尋..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目錄
+        </li>
+        <li class="sidebar-nav-overview">
+          本站概要
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#struct"><span class="nav-number">1.</span> <span class="nav-text">struct</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E7%BE%A9%E8%88%87%E4%BD%BF%E7%94%A8"><span class="nav-number">1.1.</span> <span class="nav-text">定義與使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#struct%E8%88%87%E6%8C%87%E6%A8%99"><span class="nav-number">1.2.</span> <span class="nav-text">struct與指標</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#typedef"><span class="nav-number">1.3.</span> <span class="nav-text">typedef</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%8D%E5%85%83%E6%AC%84%E4%BD%8D"><span class="nav-number">1.4.</span> <span class="nav-text">位元欄位</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#union"><span class="nav-number">2.</span> <span class="nav-text">union</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#enum"><span class="nav-number">3.</span> <span class="nav-text">enum</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%83%E8%80%83"><span class="nav-number">4.</span> <span class="nav-text">參考</span></a></li></ol></div>
+      </section>
+      <!--/noindex-->
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Gundambox"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Gundambox</p>
+  <div class="site-description" itemprop="description">什麼都碰，什麼都會，什麼都不會的鋼彈</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">40</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">分類</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">標籤</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="http://gundambox.github.io/" title="GitHub → http:&#x2F;&#x2F;gundambox.github.io"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </section>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+      
+
+      
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-TW">
+    <link itemprop="mainEntityOfPage" href="http://gundambox.github.io/2015/10/30/C%E8%AA%9E%E8%A8%80-struct%E3%80%81union%E3%80%81enum/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Gundambox">
+      <meta itemprop="description" content="什麼都碰，什麼都會，什麼都不會的鋼彈">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="鋼彈盪單槓">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          C語言-struct、union、enum
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">發表於</span>
+
+      <time title="創建時間：2015-10-30 09:10:53" itemprop="dateCreated datePublished" datetime="2015-10-30T09:10:53+08:00">2015-10-30</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新於</span>
+        <time title="修改時間：2024-03-28 08:43:41" itemprop="dateModified" datetime="2024-03-28T08:43:41+08:00">2024-03-28</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分類於</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/C%E8%AA%9E%E8%A8%80/" itemprop="url" rel="index"><span itemprop="name">C語言</span></a>
+        </span>
+    </span>
+
+  
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2015/10/30/C%E8%AA%9E%E8%A8%80-struct%E3%80%81union%E3%80%81enum/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/10/30/C語言-struct、union、enum/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="文章字數">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">文章字數：</span>
+      <span>6.4k</span>
+    </span>
+    <span class="post-meta-item" title="所需閱讀時間">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">所需閱讀時間 &asymp;</span>
+      <span>6 分鐘</span>
+    </span>
+</div>
+
+            <div class="post-description">這篇是講關於C語言的自訂型態</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="struct"><a href="#struct" class="headerlink" title="struct"></a>struct</h1><h2 id="定義與使用"><a href="#定義與使用" class="headerlink" title="定義與使用"></a>定義與使用</h2><p>如果要使用多種資料型態做運算而且資料間又有關係</p>
+<p>可以使用struct來包裝不同型態的資料</p>
+<p>struct通常用來定義儲存檔案的紀錄，或者各種資料結構</p>
+<p>struct宣告語法如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> 結構名稱&#123;</span></span><br><span class="line">    資料型態 變數名稱;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>例如你可以這樣定義一個員工的資料，別忘了在最後加上分號’;’</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Employee</span>&#123;</span></span><br><span class="line">    <span class="keyword">char</span> name[<span class="number">30</span>]; <span class="comment">// 名字</span></span><br><span class="line">    <span class="keyword">int</span> age; <span class="comment">//年齡</span></span><br><span class="line">    <span class="keyword">char</span> gender; <span class="comment">// 性別，&#x27;M&#x27; or &#x27;F&#x27;</span></span><br><span class="line">    <span class="keyword">double</span> salary; <span class="comment">// 薪水</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Employee</span> <span class="title">employee</span>;</span> <span class="comment">// 宣告變數employee，記得前面要加struct </span></span><br></pre></td></tr></table></figure>
+
+<p>接下來就是初始化變數了，你可以這樣初始化變數</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Employee</span> <span class="title">employee</span> =</span> &#123;<span class="string">&quot;gundam&quot;</span>,<span class="number">20</span>,<span class="string">&#x27;M&#x27;</span>,<span class="number">81000</span>&#125;; </span><br></pre></td></tr></table></figure>
+
+<p>如果想指定其中一個變數，在變數後面加上小數點再接上成員名稱就可以了，例如</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">employee.age = <span class="number">30</span>;</span><br></pre></td></tr></table></figure>
+
+<p>struct可以直接透過指定運算子’=’來指定，以下是範例程式</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Employee</span>&#123;</span></span><br><span class="line">    <span class="keyword">char</span> name[<span class="number">30</span>]; <span class="comment">// 名字</span></span><br><span class="line">    <span class="keyword">int</span> age; <span class="comment">//年齡</span></span><br><span class="line">    <span class="keyword">char</span> gender; <span class="comment">// 性別，&#x27;M&#x27; or &#x27;F&#x27;</span></span><br><span class="line">    <span class="keyword">double</span> salary; <span class="comment">// 薪水</span></span><br><span class="line">&#125;; </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">Employee</span> <span class="title">employee1</span> =</span> &#123;<span class="string">&quot;gundam&quot;</span>,<span class="number">20</span>,<span class="string">&#x27;M&#x27;</span>,<span class="number">81000</span>&#125;; </span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">Employee</span> <span class="title">employee2</span> =</span> &#123;<span class="string">&quot;提摩&quot;</span>,<span class="number">40</span>,<span class="string">&#x27;M&#x27;</span>,<span class="number">66000</span>&#125;;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;name\t%s\n&quot;</span>,employee1.name);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;age\t%d\n&quot;</span>,employee1.age);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;gender\t%c\n&quot;</span>,employee1.gender);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;salary\t%.2f\n&quot;</span>,employee1.salary);</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;&quot;</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">strcpy</span>(employee1.name, <span class="string">&quot;GGininder&quot;</span>);</span><br><span class="line">    employee1.age = <span class="number">30</span>;</span><br><span class="line">    employee1.salary = <span class="number">22000.0</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;name\t%s\n&quot;</span>,employee1.name);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;age\t%d\n&quot;</span>,employee1.age);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;gender\t%c\n&quot;</span>,employee1.gender);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;salary\t%.2f\n&quot;</span>,employee1.salary);</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;&quot;</span>);</span><br><span class="line">    </span><br><span class="line">    employee1 = employee2;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;name\t%s\n&quot;</span>,employee1.name);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;age\t%d\n&quot;</span>,employee1.age);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;gender\t%c\n&quot;</span>,employee1.gender);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;salary\t%.2f\n&quot;</span>,employee1.salary);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>執行結果</p>
+<pre><code>name    gundam
+age     20
+gender  M
+salary  81000.00
+
+name    GGininder
+age     30
+gender  M
+salary  22000.00
+
+name    提摩
+age     40
+gender  M
+salary  66000.00</code></pre>
+<p>struct是不能用==跟!=來判斷是否相等的</p>
+<p>因為struct的成員變數在記憶體空間裡面有可能是不連續的</p>
+<h2 id="struct與指標"><a href="#struct與指標" class="headerlink" title="struct與指標"></a>struct與指標</h2><p>struct是不能含有自己的，但是可以包含指標，例如</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Employee</span>&#123;</span></span><br><span class="line">    <span class="keyword">char</span> name[<span class="number">30</span>]; <span class="comment">// 名字</span></span><br><span class="line">    <span class="keyword">int</span> age; <span class="comment">//年齡</span></span><br><span class="line">    <span class="keyword">char</span> gender; <span class="comment">// 性別，&#x27;M&#x27; or &#x27;F&#x27;</span></span><br><span class="line">    <span class="keyword">double</span> salary; <span class="comment">// 薪水</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">Employee</span> *<span class="title">ptr</span>;</span> <span class="comment">// 指標</span></span><br><span class="line">&#125;; </span><br></pre></td></tr></table></figure>
+
+<p>這樣含有指標的struct稱為自我參考，這在後期的資料結構會提到</p>
+<p>在使用指標的時候，C語言提供結構指標運算子’-&gt;’來存取成員變數</p>
+<p>結構指標運算子’-&gt;’跟’(*指標).成員變數’是相等的，只是’-&gt;’比較方便使用</p>
+<p>以下是範例程式</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Employee</span>&#123;</span></span><br><span class="line">    <span class="keyword">char</span> name[<span class="number">30</span>]; <span class="comment">// 名字</span></span><br><span class="line">    <span class="keyword">int</span> age; <span class="comment">//年齡</span></span><br><span class="line">    <span class="keyword">char</span> gender; <span class="comment">// 性別，&#x27;M&#x27; or &#x27;F&#x27;</span></span><br><span class="line">    <span class="keyword">double</span> salary; <span class="comment">// 薪水</span></span><br><span class="line">&#125;; </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">initEmployee</span><span class="params">(struct Employee*,<span class="keyword">char</span>[],<span class="keyword">int</span>,<span class="keyword">char</span>,<span class="keyword">double</span>)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">Employee</span> <span class="title">employee</span>;</span></span><br><span class="line">    </span><br><span class="line">    initEmployee(&amp;employee,<span class="string">&quot;gundam&quot;</span>,<span class="number">20</span>,<span class="string">&#x27;M&#x27;</span>,<span class="number">81000</span>); </span><br><span class="line">    </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;name\t%s\n&quot;</span>,employee.name);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;age\t%d\n&quot;</span>,employee.age);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;gender\t%c\n&quot;</span>,employee.gender);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;salary\t%.2f\n&quot;</span>,employee.salary);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">initEmployee</span><span class="params">(struct Employee *employee,<span class="keyword">char</span> name[],<span class="keyword">int</span> age,<span class="keyword">char</span> gender,<span class="keyword">double</span> salary)</span></span>&#123;</span><br><span class="line">    <span class="built_in">strcpy</span>(employee-&gt;name, name);</span><br><span class="line">    employee-&gt;age = age;</span><br><span class="line">    employee-&gt;gender = gender;</span><br><span class="line">    employee-&gt;salary = salary;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>執行結果</p>
+<pre><code>name    gundam
+age     20
+gender  M
+salary  81000.00</code></pre>
+<h2 id="typedef"><a href="#typedef" class="headerlink" title="typedef"></a>typedef</h2><p>typedef保留字可以為資料型態建立別名，例如</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">unsigned</span> uint;</span><br></pre></td></tr></table></figure>
+
+<p>之後uint就會被當作unsigned來看待</p>
+<p>所以以下語法可以讓我們用更簡單的語法宣告變數</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">Employee</span> <span class="title">Emp</span>;</span></span><br><span class="line"></span><br><span class="line">Emp employee;</span><br></pre></td></tr></table></figure>
+
+<p>這樣前面就可以不用加上struct了，程式的可讀性也可以提升</p>
+<p>你也可以省略struct標籤直接寫別名</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span>&#123;</span></span><br><span class="line">    <span class="keyword">char</span> name[<span class="number">30</span>]; <span class="comment">// 名字</span></span><br><span class="line">    <span class="keyword">int</span> age; <span class="comment">//年齡</span></span><br><span class="line">    <span class="keyword">char</span> gender; <span class="comment">// 性別，&#x27;M&#x27; or &#x27;F&#x27;</span></span><br><span class="line">    <span class="keyword">double</span> salary; <span class="comment">// 薪水</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">Employee</span> *<span class="title">ptr</span>;</span> <span class="comment">// 指標</span></span><br><span class="line">&#125;Emp; </span><br></pre></td></tr></table></figure>
+
+<p>而特別要注意的是函數指標的別名，例如</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">int</span> <span class="params">(*CMP)</span><span class="params">(<span class="keyword">int</span>,<span class="keyword">int</span>)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>這樣是宣告一個別名叫CMP，型態是回傳值為int，參數列為(int,int)的函數指標</p>
+<h2 id="位元欄位"><a href="#位元欄位" class="headerlink" title="位元欄位"></a>位元欄位</h2><p>位元欄位(Bit fields)使用時機在於記憶體空間跟配合硬體實作</p>
+<p>位元欄位的宣告方式是在unsigned或int的成員後面加上冒號’:’以及欄位寬度</p>
+<p>宣告語法如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">File</span> &#123;</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> modified : <span class="number">1</span>; <span class="comment">// 使用1位元</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> mode : <span class="number">2</span>;  <span class="comment">// 使用2位元</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> owner : <span class="number">3</span>; <span class="comment">// 使用3位元</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> group : <span class="number">3</span>; <span class="comment">// 使用3位元</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>以下是範例程式</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">File</span> &#123;</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> modified : <span class="number">1</span>; <span class="comment">// 使用1位元</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> mode : <span class="number">2</span>;  <span class="comment">// 使用2位元</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> owner : <span class="number">3</span>; <span class="comment">// 使用3位元</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> group : <span class="number">3</span>; <span class="comment">// 使用3位元</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">initFile</span><span class="params">(struct File*,<span class="keyword">int</span>,<span class="keyword">int</span>,<span class="keyword">int</span>,<span class="keyword">int</span>)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">File</span> <span class="title">file</span>;</span></span><br><span class="line">    </span><br><span class="line">    initFile(&amp;file,<span class="number">0</span>,<span class="number">0</span>,<span class="number">7</span>,<span class="number">7</span>); </span><br><span class="line">    </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;modified\t%d\n&quot;</span>,file.modified);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;mode\t\t%d\n&quot;</span>,file.mode);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;owner\t\t%d\n&quot;</span>,file.owner);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;group\t\t%d\n&quot;</span>,file.group);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">puts</span>(<span class="string">&quot;&quot;</span>);	</span><br><span class="line">    </span><br><span class="line">    initFile(&amp;file,<span class="number">0</span>,<span class="number">0</span>,<span class="number">7</span>,<span class="number">8</span>); </span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;modified\t%d\n&quot;</span>,file.modified);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;mode\t\t%d\n&quot;</span>,file.mode);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;owner\t\t%d\n&quot;</span>,file.owner);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;group\t\t%d\n&quot;</span>,file.group); <span class="comment">// overflow惹www </span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">initFile</span><span class="params">(struct File* file,<span class="keyword">int</span> modified,<span class="keyword">int</span> mode,<span class="keyword">int</span> owner,<span class="keyword">int</span> group)</span></span>&#123;</span><br><span class="line">    file-&gt;modified = modified;</span><br><span class="line">    file-&gt;mode = mode;</span><br><span class="line">    file-&gt;owner = owner;</span><br><span class="line">    file-&gt;group = group;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>執行結果</p>
+<pre><code>modified        0
+mode            0
+owner           7
+group           7
+
+modified        0
+mode            0
+owner           7
+group           0</code></pre>
+<h1 id="union"><a href="#union" class="headerlink" title="union"></a>union</h1><p>union跟struct一樣，都是產生一種新的資料型態，只是不同的是</p>
+<p>struct是每個成員變數都配置一段空間，union則是共用一段記憶體空間</p>
+<p>union所需的記憶體空間大小由最大的成員變數覺得，例如以下union的大小為8位元組</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">union</span> <span class="title">var</span>&#123;</span></span><br><span class="line">    <span class="keyword">char</span> ch;</span><br><span class="line">    <span class="keyword">int</span> num1;</span><br><span class="line">    <span class="keyword">double</span> num2;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>union能執行的操作跟struct一樣</p>
+<p>例如指定、取址、使用結構成員運算子’.’跟使用結構指標運算子’-&gt;’</p>
+<p>以下是union的範例程式</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">union</span> <span class="title">Var</span>&#123;</span> </span><br><span class="line">    <span class="keyword">char</span> ch;</span><br><span class="line">    <span class="keyword">int</span> num1;</span><br><span class="line">    <span class="keyword">double</span> num2;</span><br><span class="line">&#125;; </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="class"><span class="keyword">union</span> <span class="title">Var</span> <span class="title">var</span> =</span> &#123;<span class="string">&#x27;x&#x27;</span>&#125;; <span class="comment">// 初始化只能指定第一個成員</span></span><br><span class="line">    <span class="comment">// union Var var = &#123;123&#125;; 這句是不行的</span></span><br><span class="line">    </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;var.ch = %c\n&quot;</span>,var.ch); </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;var.num1 = %d\n&quot;</span>,var.num1); <span class="comment">// 內容是無效的 </span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;var.num2 = %.3f\n\n&quot;</span>,var.num2); <span class="comment">// 內容是無效的 </span></span><br><span class="line">    </span><br><span class="line">    var.num1 = <span class="number">123</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;var.ch = %c\n&quot;</span>,var.ch); <span class="comment">// 內容是無效的 </span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;var.num1 = %d\n&quot;</span>,var.num1);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;var.num2 = %.3f\n\n&quot;</span>,var.num2); <span class="comment">// 內容是無效的</span></span><br><span class="line">    </span><br><span class="line">    var.num2 = <span class="number">456.789</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;var.ch = %c\n&quot;</span>,var.ch); <span class="comment">// 內容是無效的 </span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;var.num1 = %d\n&quot;</span>,var.num1); <span class="comment">// 內容是無效的</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;var.num2 = %.3f\n\n&quot;</span>,var.num2);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>執行結果</p>
+<pre><code>var.ch = x
+var.num1 = 120
+var.num2 = 0.000
+
+var.ch = &#123;
+var.num1 = 123
+var.num2 = 0.000
+
+var.ch = ?
+var.num1 = -1099511628
+var.num2 = 456.789</code></pre>
+<h1 id="enum"><a href="#enum" class="headerlink" title="enum"></a>enum</h1><p>C語言提供最後一種自定型態為enum，是一組由識別字所代表的整數常數</p>
+<p>除非特別指定，不然都是由0開始，接下來遞增1，例如以下語法：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">week</span>&#123;</span>Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>以上從Sunday開始，各個識別字被依序設定為0到6，你也可以指定數值</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">week</span>&#123;</span>Monday=<span class="number">1</span>,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>這樣數字就會被指定1到7，以下是enum的範例程式</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">week</span>&#123;</span>Monday=<span class="number">1</span>,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="class"><span class="keyword">enum</span> <span class="title">week</span> <span class="title">w</span>;</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *day_name[] = &#123;</span><br><span class="line">        <span class="string">&quot;&quot;</span>,<span class="string">&quot;Monday&quot;</span>,<span class="string">&quot;Tuesday&quot;</span>,<span class="string">&quot;Wednesday&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Thursday&quot;</span>,<span class="string">&quot;Friday&quot;</span>,<span class="string">&quot;Saturday&quot;</span>,<span class="string">&quot;Sunday&quot;</span> </span><br><span class="line">    &#125;;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span>(w=Monday; w &lt;= Sunday; w++)</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%s\n&quot;</span>,day_name[w]);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>執行結果</p>
+<pre><code>Monday
+Tuesday
+Wednesday
+Thursday
+Friday
+Saturday
+Sunday</code></pre>
+<h1 id="參考"><a href="#參考" class="headerlink" title="參考"></a>參考</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/C%E8%AF%AD%E8%A8%80">C語言</a></li>
+<li><a target="_blank" rel="noopener" href="http://openhome.cc/Gossip/CGossip/StructABC.html">struct 簡介</a></li>
+<li><a target="_blank" rel="noopener" href="http://openhome.cc/Gossip/CGossip/StructPoint.html">結構與指標</a></li>
+<li><a target="_blank" rel="noopener" href="http://openhome.cc/Gossip/CGossip/BitField.html">位元欄位</a></li>
+<li><a target="_blank" rel="noopener" href="http://openhome.cc/Gossip/CGossip/enum.html">enum</a></li>
+<li><a target="_blank" rel="noopener" href="http://openhome.cc/Gossip/CGossip/union.html">union</a></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+  <div class="followme">
+    <span>歡迎關注我的其它發布渠道</span>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+          <div class="post-tags">
+              <a href="/tags/C%E8%AA%9E%E8%A8%80/" rel="tag"># C語言</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2015/10/27/C%E8%AA%9E%E8%A8%80-%E6%8C%87%E6%A8%99/" rel="prev" title="C語言-指標">
+                  <i class="fa fa-chevron-left"></i> C語言-指標
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2015/10/30/C%E8%AA%9E%E8%A8%80-%E6%AA%94%E6%A1%88I-O/" rel="next" title="C語言-檔案I/O">
+                  C語言-檔案I/O <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+      
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      
+
+      
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gundambox</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="總字數">106k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="所需總閱讀時間">1:36</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 強力驅動
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/@next-theme/pjax@0.4.0/pjax.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '.page-configurations',
+    '.main-inner',
+    '.post-toc-wrap',
+    '.languages',
+    '.pjax'
+  ],
+  analytics: false,
+  cacheBust: false,
+  scrollRestoration: false,
+  scrollTo: !CONFIG.bookmark.enable
+});
+
+document.addEventListener('pjax:success', () => {
+  pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  const hasTOC = document.querySelector('.post-toc');
+  document.querySelector('.sidebar-inner').classList.toggle('sidebar-nav-active', hasTOC);
+  document.querySelector(hasTOC ? '.sidebar-nav-toc' : '.sidebar-nav-overview').click();
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+    <div class="pjax">
+  
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://gundambox.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://gundambox.github.io/2015/10/30/C%E8%AA%9E%E8%A8%80-struct%E3%80%81union%E3%80%81enum/";
+    this.page.identifier = "2015/10/30/C語言-struct、union、enum/";
+    this.page.title = "C語言-struct、union、enum";
+    };
+  NexT.utils.loadComments('#disqus_thread', () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://gundambox.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+    </div>
+</body>
+</html>
